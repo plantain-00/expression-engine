@@ -18,6 +18,47 @@ An expression tokenizer, parser and evaluator.
 ## usage
 
 ```ts
-import ExpressionEngine from "expression-engine";
+import { parseExpression, Tokenizer } from "expression-engine";
+
+const tokens = new Tokenizer('a + b').toTokens()
+const ast = parseExpression(tokens)
 // <script src="./node_modules/expression-engine/expression-engine.min.js"></script>
 ```
+
+## supported expression features
+
++ binary expression: + - * / > < >= <= == != && ||
++ group: ( )
++ unary expression: + -
++ member expression: a.b a[0] a['b']
++ condition expression: a ? b : c
++ numeric literal: 123
++ string literal: 'abc' "abc"
++ call expression: a(1, 2)
+
+## todo
+
++ i18n error message
++ evaluate
++ and or not
++ percent
++ !a
++ 123_456
++ plugin?
++ & | ^ << >> >>>
++ a % b
++ === !==
++ **
++ ?.
++ position
++ array literal
++ object literal
++ destructuring
++ template string
++ null
++ undefined
++ regex literal
++ 0x 0o 0b
++ 123n
++ 2e2
++ |>
