@@ -1,0 +1,53 @@
+{
+  "name": "expression-engine",
+  "version": "1.0.0",
+  "description": "An expression tokenizer, parser and evaluator.",
+  "main": "nodejs/index.js",
+  "scripts": {
+    "build": "clean-scripts build",
+    "lint": "clean-scripts lint",
+    "test": "clean-scripts test",
+    "fix": "clean-scripts fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plantain-00/expression-engine.git"
+  },
+  "keywords": [
+    "expression",
+    "tokenizer",
+    "parser",
+    "evaluator"
+  ],
+  "author": "York Yao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/plantain-00/expression-engine/issues"
+  },
+  "homepage": "https://github.com/plantain-00/expression-engine#readme",
+  "devDependencies": {
+    "@commitlint/cli": "7.6.1",
+    "@commitlint/config-conventional": "7.6.0",
+    "ava": "1.4.1",
+    "clean-scripts": "1.11.0",
+    "markdownlint-cli": "0.16.0",
+    "no-unused-export": "1.7.0",
+    "rimraf": "2.6.3",
+    "rollup": "1.11.3",
+    "rollup-plugin-node-resolve": "4.2.4",
+    "rollup-plugin-uglify": "6.0.2",
+    "standard": "12.0.1",
+    "tslint": "5.16.0",
+    "tslint-config-standard": "8.0.1",
+    "tslint-sonarts": "1.9.0",
+    "type-coverage": "2.0.1",
+    "typescript": "3.4.5"
+  },
+  "module": "browser/index.js",
+  "unpkg": "expression-engine.min.js",
+  "jsdelivr": "expression-engine.min.js",
+  "types": "nodejs/index.d.ts",
+  "typeCoverage": {
+    "atLeast": 100
+  }
+}
