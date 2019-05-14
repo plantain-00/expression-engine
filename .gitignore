@@ -59,3 +59,12 @@ typings/
 
 # next.js build output
 .next
+# Source
+.vscode
+dist
+!*.config.js
+service-worker.js
+!*.index.bundle.js
+#**/*-*.png
+#index.html
+*.data
