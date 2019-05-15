@@ -7,7 +7,8 @@ export class Tokenizer {
   constructor(public source: string) { }
   private index = 0
   private previousToken: Token = {
-    type: 'EOFToken'
+    type: 'EOFToken',
+    range: [0, 0]
   }
 
   public toTokens() {
@@ -24,7 +25,8 @@ export class Tokenizer {
   private nextToken(): Token {
     if (this.index >= this.source.length) {
       this.previousToken = {
-        type: 'EOFToken'
+        type: 'EOFToken',
+        range: [this.source.length, this.source.length]
       }
     } else {
       const c = this.source[this.index]
@@ -51,6 +53,7 @@ export class Tokenizer {
   }
 
   private nextPunctuator(c: string): PunctuatorToken {
+    const startIndex = this.index
     if (c === '>' || c === '<' || c === '=' || c === '!') {
       if (this.source[this.index + 1] === '=') {
         c += '='
@@ -63,38 +66,44 @@ export class Tokenizer {
     this.index++
     return {
       type: 'PunctuatorToken',
-      value: c
+      value: c,
+      range: [startIndex, this.index]
     }
   }
 
   private nextIdentifierToken(): BooleanLiteral | Identifier | KeywordToken {
     const index = this.findEndOfIdentifier()
     if (index === undefined) {
-      const token = this.getExplicitIdentifierToken(this.source.substring(this.index))
+      const range: [number, number] = [this.index, this.source.length]
+      const token = this.getExplicitIdentifierToken(this.source.substring(this.index), range)
       this.index = this.source.length
       return token
     }
-    const token = this.getExplicitIdentifierToken(this.source.substring(this.index, index))
+    const range: [number, number] = [this.index, index]
+    const token = this.getExplicitIdentifierToken(this.source.substring(this.index, index), range)
     this.index = index
     return token
   }
 
-  private getExplicitIdentifierToken(tokenName: string): BooleanLiteral | Identifier | KeywordToken {
+  private getExplicitIdentifierToken(tokenName: string, range: [number, number]): BooleanLiteral | Identifier | KeywordToken {
     if (tokenName === 'true' || tokenName === 'false') {
       return {
         type: 'BooleanLiteral',
-        value: tokenName === 'true'
+        value: tokenName === 'true',
+        range
       }
     }
     if (tokenName === 'this') {
       return {
         type: 'KeywordToken',
-        name: tokenName
+        name: tokenName,
+        range
       }
     }
     return {
       type: 'Identifier',
-      name: tokenName
+      name: tokenName,
+      range
     }
   }
 
@@ -109,6 +118,7 @@ export class Tokenizer {
   }
 
   private nextNumericToken(hasDecimalPoint: boolean): NumericLiteral {
+    const startIndex = this.index
     for (let i = this.index + 1; i < this.source.length; i++) {
       const c = this.source[i]
       if (c === '.') {
@@ -123,7 +133,8 @@ export class Tokenizer {
         this.index = i
         return {
           type: 'NumericLiteral',
-          value
+          value,
+          range: [startIndex, this.index]
         }
       }
     }
@@ -131,11 +142,13 @@ export class Tokenizer {
     this.index = this.source.length
     return {
       type: 'NumericLiteral',
-      value
+      value,
+      range: [startIndex, this.index]
     }
   }
 
   private nextStringToken(c: string): StringLiteral {
+    const startIndex = this.index
     this.index++
     const index = this.findEndOfString(c)
     if (index === undefined) {
@@ -145,7 +158,8 @@ export class Tokenizer {
     this.index = index + 1
     return {
       type: 'StringLiteral',
-      value: token
+      value: token,
+      range: [startIndex, this.index]
     }
   }
 

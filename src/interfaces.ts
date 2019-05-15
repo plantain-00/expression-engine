@@ -6,14 +6,14 @@ export type Token = BooleanLiteral | EOFToken | Identifier | KeywordToken | Nume
 /**
  * @public
  */
-export interface EOFToken {
+export interface EOFToken extends Node {
   type: 'EOFToken'
 }
 
 /**
  * @public
  */
-export interface KeywordToken {
+export interface KeywordToken extends Node {
   type: 'KeywordToken'
   name: string
 }
@@ -21,7 +21,14 @@ export interface KeywordToken {
 /**
  * @public
  */
-export interface PunctuatorToken {
+export interface Node {
+  range: [number, number]
+}
+
+/**
+ * @public
+ */
+export interface PunctuatorToken extends Node {
   type: 'PunctuatorToken'
   value: string
 }
@@ -45,7 +52,7 @@ export type Expression =
 /**
  * @public
  */
-export interface NumericLiteral {
+export interface NumericLiteral extends Node {
   type: 'NumericLiteral'
   value: number
 }
@@ -53,7 +60,7 @@ export interface NumericLiteral {
 /**
  * @public
  */
-export interface LogicalExpression {
+export interface LogicalExpression extends Node {
   type: 'LogicalExpression'
   operator: LogicalOperator
   left: Expression
@@ -68,7 +75,7 @@ export type LogicalOperator = '||' | '&&'
 /**
  * @public
  */
-export interface CallExpression {
+export interface CallExpression extends Node {
   type: 'CallExpression'
   callee: Expression
   arguments: Expression[]
@@ -77,7 +84,7 @@ export interface CallExpression {
 /**
  * @public
  */
-export interface ConditionalExpression {
+export interface ConditionalExpression extends Node {
   type: 'ConditionalExpression'
   test: Expression
   consequent: Expression
@@ -87,7 +94,7 @@ export interface ConditionalExpression {
 /**
  * @public
  */
-export interface StringLiteral {
+export interface StringLiteral extends Node {
   type: 'StringLiteral'
   value: string
 }
@@ -95,7 +102,7 @@ export interface StringLiteral {
 /**
  * @public
  */
-export interface BooleanLiteral {
+export interface BooleanLiteral extends Node {
   type: 'BooleanLiteral'
   value: boolean
 }
@@ -103,7 +110,7 @@ export interface BooleanLiteral {
 /**
  * @public
  */
-export interface Identifier {
+export interface Identifier extends Node {
   type: 'Identifier'
   name: string
 }
@@ -111,14 +118,14 @@ export interface Identifier {
 /**
  * @public
  */
-export interface ThisExpression {
+export interface ThisExpression extends Node {
   type: 'ThisExpression'
 }
 
 /**
  * @public
  */
-export interface MemberExpression {
+export interface MemberExpression extends Node {
   type: 'MemberExpression'
   object: Expression
   property: Expression
@@ -127,7 +134,7 @@ export interface MemberExpression {
 /**
  * @public
  */
-export interface UnaryExpression {
+export interface UnaryExpression extends Node {
   type: 'UnaryExpression'
   operator: UnaryOperator
   argument: Expression
@@ -141,7 +148,7 @@ export type UnaryOperator = '+' | '-'
 /**
  * @public
  */
-export interface BinaryExpression {
+export interface BinaryExpression extends Node {
   type: 'BinaryExpression'
   operator: BinaryOperator
   left: Expression

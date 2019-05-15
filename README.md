@@ -50,7 +50,6 @@ const ast = parseExpression(tokens)
 + === !==
 + **
 + ?.
-+ position
 + array literal
 + object literal
 + destructuring
