@@ -3,7 +3,11 @@ import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, Numer
 /**
  * @public
  */
-export class Tokenizer {
+export function tokenizeExpression(expression: string) {
+  return new Tokenizer(expression).toTokens()
+}
+
+class Tokenizer {
   constructor(public source: string) { }
   private index = 0
   private previousToken: Token = {

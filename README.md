@@ -18,9 +18,9 @@ An expression tokenizer, parser and evaluator.
 ## usage
 
 ```ts
-import { parseExpression, Tokenizer } from "expression-engine";
+import { tokenizeExpression, parseExpression } from "expression-engine";
 
-const tokens = new Tokenizer('a + b').toTokens()
+const tokens = tokenizeExpression('a + b')
 const ast = parseExpression(tokens)
 // <script src="./node_modules/expression-engine/expression-engine.min.js"></script>
 ```

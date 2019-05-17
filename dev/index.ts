@@ -1,6 +1,6 @@
-import { parseExpression, Tokenizer } from '../src'
+import { parseExpression, tokenizeExpression } from '../src'
 
-const tokens = new Tokenizer(`a['b']`).toTokens()
+const tokens = tokenizeExpression(`a['b']`)
 console.info(tokens)
 const ast = parseExpression(tokens)
 console.info(JSON.stringify(ast, null, 2))

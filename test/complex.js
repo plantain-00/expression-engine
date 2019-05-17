@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, Tokenizer } from '../dist/nodejs'
+import { parseExpression, tokenizeExpression } from '../dist/nodejs'
 
 const expressions = [
   'a || b && c == g < h + j * k',
@@ -10,7 +10,7 @@ for (const expression of expressions) {
   const title = `complex: ${expression}`
 
   test(title, (t) => {
-    const tokens = new Tokenizer(expression).toTokens()
+    const tokens = tokenizeExpression(expression)
     const ast = parseExpression(tokens)
     t.snapshot({ tokens, ast }, { id: title })
   })
