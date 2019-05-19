@@ -7,7 +7,6 @@ export function parseExpression(tokens: Token[], locale?: Locale): Expression {
   return new Parser(locale).parseExpression(tokens)
 }
 
-// tslint:disable-next-line:cognitive-complexity
 class Parser {
   constructor(locale?: Locale) {
     this.locale = getLocale(locale)
@@ -31,7 +30,7 @@ class Parser {
     }
     if (tokens.length === 2) {
       const [operator, token] = tokens
-      if (operator.type === 'PunctuatorToken' && priority4Operators.includes(operator.value) && !isToken(token)) {
+      if (operator.type === 'PunctuatorToken' && binaryOperators.includes(operator.value) && !isToken(token)) {
         return {
           type: 'UnaryExpression',
           operator: operator.value as UnaryOperator,
@@ -53,7 +52,7 @@ class Parser {
             range
           }
         }
-        if (operators.includes(operator.value)) {
+        if (priorizedOperators.some((p) => p.some((c) => c === operator.value))) {
           if (operator.value === '&&' || operator.value === '||') {
             return {
               type: 'LogicalExpression',
@@ -134,7 +133,21 @@ class Parser {
       }
       return this.parseExpression(newTokens)
     }
-    for (const operators of [priority3Operators, priority4Operators, priority6Operators, priority7Operators, priority11Operators, priority12Operators]) {
+    if (tokens.some((t) => t.type === 'PunctuatorToken' && t.value === '.')) {
+      const newTokens: Array<Token | Expression> = []
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i]
+        if (token.type === 'PunctuatorToken' && token.value === '.') {
+          const object = newTokens.pop()!
+          newTokens.push(this.parseExpression([object, token, tokens[i + 1]]))
+          i++
+        } else {
+          newTokens.push(token)
+        }
+      }
+      return this.parseExpression(newTokens)
+    }
+    for (const operators of priorizedOperators) {
       if (tokens.some((t) => t.type === 'PunctuatorToken' && operators.includes(t.value))) {
         const newTokens: Array<Token | Expression> = []
         for (let i = 0; i < tokens.length; i++) {
@@ -170,20 +183,16 @@ class Parser {
   }
 }
 
-const priority3Operators = ['*', '/']
-const priority4Operators = ['+', '-']
-const priority6Operators = ['>', '>=', '<', '<=']
-const priority7Operators = ['==', '!=']
-const priority11Operators = ['&&']
-const priority12Operators = ['||']
-const operators = [
-  ...priority3Operators,
-  ...priority4Operators,
-  ...priority6Operators,
-  ...priority7Operators,
-  ...priority11Operators,
-  ...priority12Operators
+const priorizedOperators = [
+  ['*', '/'],
+  ['+', '-'],
+  ['>', '>=', '<', '<='],
+  ['==', '!=', '===', '!=='],
+  ['&&'],
+  ['||']
 ]
+
+const binaryOperators = ['+', '-']
 
 function isToken(token: Token | Expression): token is EOFToken | PunctuatorToken | KeywordToken {
   return token.type === 'EOFToken'

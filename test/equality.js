@@ -4,7 +4,9 @@ import { parseExpression, tokenizeExpression } from '../dist/nodejs'
 
 const expressions = [
   'x == y',
-  'x != y'
+  'x != y',
+  'x === y',
+  'x!==y'
 ]
 for (const expression of expressions) {
   const title = `equality: ${expression}`

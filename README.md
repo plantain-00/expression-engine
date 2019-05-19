@@ -18,16 +18,17 @@ An expression tokenizer, parser and evaluator.
 ## usage
 
 ```ts
-import { tokenizeExpression, parseExpression } from "expression-engine";
+import { tokenizeExpression, parseExpression, evaluateExpression } from "expression-engine";
 
 const tokens = tokenizeExpression('a + b')
 const ast = parseExpression(tokens)
+const result = evaluateExpression(ast, { a: 1, b: 2 })
 // <script src="./node_modules/expression-engine/expression-engine.min.js"></script>
 ```
 
 ## supported expression features
 
-+ binary expression: + - * / > < >= <= == != && ||
++ binary expression: + - * / > < >= <= == != === !== && ||
 + group: ( )
 + unary expression: + -
 + member expression: a.b a[0] a['b']
@@ -38,7 +39,6 @@ const ast = parseExpression(tokens)
 
 ## todo
 
-+ evaluate
 + and or not
 + percent
 + !a
@@ -46,7 +46,6 @@ const ast = parseExpression(tokens)
 + plugin?
 + & | ^ << >> >>>
 + a % b
-+ === !==
 + **
 + ?.
 + array literal

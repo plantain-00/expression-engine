@@ -63,8 +63,13 @@ class Tokenizer {
     const startIndex = this.index
     if (c === '>' || c === '<' || c === '=' || c === '!') {
       if (this.source[this.index + 1] === '=') {
-        c += '='
-        this.index++
+        if ((c === '=' || c === '!') && this.source[this.index + 2] === '=') {
+          c += '=='
+          this.index += 2
+        } else {
+          c += '='
+          this.index++
+        }
       }
     } else if ((c === '&' || c === '|') && this.source[this.index + 1] === c) {
       c += c
