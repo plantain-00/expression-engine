@@ -170,6 +170,12 @@ class Evaluator {
 
   private evaluateUnaryExpression(expression: UnaryExpression, context: { [name: string]: unknown }): unknown {
     const value = this.evalutate(expression.argument, context, true)
+    if (expression.operator === '!') {
+      if (typeof value !== 'boolean') {
+        throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.argument.range[0]))
+      }
+      return !value
+    }
     if (typeof value !== 'number' || isNaN(value)) {
       throw new Error(replaceLocaleParameters(this.locale.expect, 'Number', expression.argument.range[0]))
     }
@@ -178,6 +184,9 @@ class Evaluator {
     }
     if (expression.operator === '+') {
       return value
+    }
+    if (expression.operator === '~') {
+      return ~value
     }
     throw new Error(this.locale.unexpectToken)
   }

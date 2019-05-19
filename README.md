@@ -26,22 +26,27 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 // <script src="./node_modules/expression-engine/expression-engine.min.js"></script>
 ```
 
-## supported expression features
+## supported expression features(ordered by priority from high to low)
 
-+ binary expression: + - * / > < >= <= == != === !== && ||
-+ group: ( )
-+ unary expression: + -
-+ member expression: a.b a[0] a['b']
-+ condition expression: a ? b : c
 + numeric literal: 123
 + string literal: 'abc' "abc"
-+ call expression: a(1, 2)
++ boolean literal: true false
+
++ group: ( )
++ member expression and call expression: a.b a[0] a['b'] a(1, 2)
++ unary expression: + - ! ~
++ binary expression: * /
++ binary expression: + -
++ binary expression: > < >= <=
++ binary expression: == != === !==
++ binary expression: &&
++ binary expression: ||
++ condition expression: a ? b : c
 
 ## todo
 
 + and or not
 + percent
-+ !a
 + 123_456
 + plugin?
 + & | ^ << >> >>>

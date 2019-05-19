@@ -1,10 +1,10 @@
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const tokens = tokenizeExpression(`a.width > a.height ? 'row' : 'column'`)
+const tokens = tokenizeExpression(`a[0]`)
 console.info(tokens)
 const ast = parseExpression(tokens)
 console.info(JSON.stringify(ast, null, 2))
 const result = evaluateExpression(ast, {
-  a: { width: 2, height: 1 }
+  a: [1, 2]
 })
 console.info(result)

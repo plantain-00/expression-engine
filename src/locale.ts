@@ -6,7 +6,6 @@ export const defaultLocale = {
   expect: 'Expect {0}: {1}',
   unexpectToken: 'Unexpected token: {0} {1}',
   expectUnaryOperator: 'Expect unary operator: {0}',
-  expectBinaryOperator: 'Expect binary operator: {0}',
   expectConditionalOperator: 'Expect conditional operator: {0} {1}'
 }
 
