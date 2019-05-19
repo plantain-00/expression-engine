@@ -1,4 +1,4 @@
-import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral } from '.'
+import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral, Locale, getLocale, replaceLocaleParameters } from '.'
 
 /**
  * @public
@@ -8,7 +8,10 @@ export function tokenizeExpression(expression: string) {
 }
 
 class Tokenizer {
-  constructor(public source: string) { }
+  constructor(public source: string, locale?: Locale) {
+    this.locale = getLocale(locale)
+  }
+  private locale: Locale
   private index = 0
   private previousToken: Token = {
     type: 'EOFToken',
@@ -127,7 +130,7 @@ class Tokenizer {
       const c = this.source[i]
       if (c === '.') {
         if (hasDecimalPoint) {
-          throw new Error('Multiple decimal point')
+          throw new Error(replaceLocaleParameters(this.locale.multipleDecimalPoint, i))
         }
         hasDecimalPoint = true
       } else if (c > '0' && c < '9') {
@@ -156,7 +159,7 @@ class Tokenizer {
     this.index++
     const index = this.findEndOfString(c)
     if (index === undefined) {
-      throw new Error(`Expect ${c}`)
+      throw new Error(replaceLocaleParameters(this.locale.expect, c, startIndex))
     }
     const token = this.source.substring(this.index, index)
     this.index = index + 1

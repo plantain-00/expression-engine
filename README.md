@@ -38,7 +38,6 @@ const ast = parseExpression(tokens)
 
 ## todo
 
-+ i18n error message
 + evaluate
 + and or not
 + percent
