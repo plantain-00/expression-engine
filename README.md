@@ -35,7 +35,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + group: ( )
 + member expression and call expression: a.b a[0] a['b'] a(1, 2)
 + unary expression: + - ! ~
-+ binary expression: * /
++ binary expression: * / %
 + binary expression: + -
 + binary expression: > < >= <=
 + binary expression: == != === !==
@@ -50,7 +50,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123_456
 + plugin?
 + & | ^ << >> >>>
-+ a % b
 + **
 + ?.
 + array literal
@@ -64,3 +63,5 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123n
 + 2e2
 + |>
++ non-ASCII identifier name
++ improve performance

@@ -124,6 +124,9 @@ class Evaluator {
     if (expression.operator === '/') {
       return left / right
     }
+    if (expression.operator === '%') {
+      return left % right
+    }
     if (expression.operator === '>') {
       return left > right
     }
