@@ -194,6 +194,7 @@ class Parser {
 }
 
 const priorizedBinaryOperators = [
+  ['**'],
   ['*', '/', '%'],
   ['+', '-'],
   ['>', '>=', '<', '<='],

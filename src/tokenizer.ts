@@ -74,6 +74,9 @@ class Tokenizer {
     } else if ((c === '&' || c === '|') && this.source[this.index + 1] === c) {
       c += c
       this.index++
+    } else if (c === '*' && this.source[this.index + 1] === '*') {
+      c += '*'
+      this.index++
     }
     this.index++
     return {
