@@ -59,6 +59,7 @@ class Tokenizer {
     return this.previousToken
   }
 
+  // tslint:disable-next-line:cognitive-complexity
   private nextPunctuator(c: string): PunctuatorToken {
     const startIndex = this.index
     if (c === '>' || c === '<' || c === '=' || c === '!') {
@@ -76,6 +77,9 @@ class Tokenizer {
       this.index++
     } else if (c === '*' && this.source[this.index + 1] === '*') {
       c += '*'
+      this.index++
+    } else if (c === '?' && this.source[this.index + 1] === '.') {
+      c += '.'
       this.index++
     }
     this.index++

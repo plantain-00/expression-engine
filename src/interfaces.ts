@@ -129,6 +129,7 @@ export interface MemberExpression extends Node {
   type: 'MemberExpression'
   object: Expression
   property: Expression
+  optional?: boolean
 }
 
 /**

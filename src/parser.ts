@@ -54,11 +54,12 @@ class Parser {
       const [left, operator, right] = tokens
       const range: [number, number] = [left.range[0], right.range[1]]
       if (operator.type === 'PunctuatorToken') {
-        if (operator.value === '.') {
+        if (callOperators.includes(operator.value)) {
           return {
             type: 'MemberExpression',
             object: this.parseTokenOrExpression(left),
             property: this.parseTokenOrExpression(right),
+            optional: operator.value === '?.',
             range
           }
         }
@@ -108,12 +109,12 @@ class Parser {
       }
     }
 
-    if (tokens.some((t) => t.type === 'PunctuatorToken' && (t.value === '.' || t.value === '(' || t.value === '['))) {
+    if (tokens.some((t) => t.type === 'PunctuatorToken' && (callOperators.includes(t.value) || t.value === '(' || t.value === '['))) {
       const newTokens: Array<Token | Expression> = []
       for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i]
         if (token.type === 'PunctuatorToken') {
-          if (token.value === '.') {
+          if (callOperators.includes(token.value)) {
             const object = newTokens.pop()!
             newTokens.push(this.parseExpression([object, token, tokens[i + 1]]))
             i++
@@ -216,6 +217,8 @@ const priorizedBinaryOperators = [
 
 const prefixBinaryOperators = ['+', '-', '!', '~']
 const postfixBinaryOpeators = ['%']
+
+const callOperators = ['.', '?.']
 
 function isToken(token: Token | Expression): token is EOFToken | PunctuatorToken | KeywordToken {
   return token.type === 'EOFToken'

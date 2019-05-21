@@ -33,7 +33,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + boolean literal: true false
 
 + group: ( )
-+ member expression and call expression: a.b a[0] a['b'] a(1, 2)
++ member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b
 + unary expression: %
 + unary expression: + - ! ~
 + binary expression: **
@@ -51,7 +51,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123_456
 + plugin?
 + & | ^ << >> >>>
-+ ?. ??
++ ??
 + array literal
 + object literal
 + destructuring
