@@ -78,8 +78,8 @@ class Tokenizer {
     } else if (c === '*' && this.source[this.index + 1] === '*') {
       c += '*'
       this.index++
-    } else if (c === '?' && this.source[this.index + 1] === '.') {
-      c += '.'
+    } else if (c === '?' && (this.source[this.index + 1] === '.' || this.source[this.index + 1] === '?')) {
+      c += this.source[this.index + 1]
       this.index++
     }
     this.index++

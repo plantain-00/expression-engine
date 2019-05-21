@@ -42,7 +42,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + binary expression: > < >= <=
 + binary expression: == != === !==
 + binary expression: &&
-+ binary expression: ||
++ binary expression: || ??
 + condition expression: a ? b : c
 
 ## todo
@@ -51,7 +51,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123_456
 + plugin?
 + & | ^ << >> >>>
-+ ??
 + array literal
 + object literal
 + destructuring

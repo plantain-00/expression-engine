@@ -212,7 +212,7 @@ const priorizedBinaryOperators = [
   ['>', '>=', '<', '<='],
   ['==', '!=', '===', '!=='],
   ['&&'],
-  ['||']
+  ['||', '??']
 ]
 
 const prefixBinaryOperators = ['+', '-', '!', '~']

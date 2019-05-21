@@ -159,4 +159,4 @@ export interface BinaryExpression extends Node {
 /**
  * @public
  */
-export type BinaryOperator = '+' | '-' | '*' | '/' | '%' | '>' | '<' | '>=' | '<=' | '==' | '!=' | '&&' | '||' | '===' | '!=='
+export type BinaryOperator = '+' | '-' | '*' | '/' | '%' | '>' | '<' | '>=' | '<=' | '==' | '!=' | '&&' | '||' | '??' | '===' | '!=='

@@ -102,7 +102,10 @@ class Evaluator {
       return expression.operator === '==' || expression.operator === '===' ? left === right : left !== right
     }
 
-    if (expression.operator === '&&' || expression.operator === '||') {
+    if (expression.operator === '&&' || expression.operator === '||' || expression.operator === '??') {
+      if (expression.operator === '??') {
+        return left !== null && left !== undefined ? left : right
+      }
       if (typeof left !== 'boolean') {
         throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.left.range[0]))
       }
