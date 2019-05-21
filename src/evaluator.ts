@@ -194,6 +194,9 @@ class Evaluator {
     if (expression.operator === '~') {
       return ~value
     }
+    if (expression.operator === '%') {
+      return value / 100
+    }
     throw new Error(this.locale.unexpectToken)
   }
 }

@@ -31,11 +31,19 @@ class Parser {
 
     if (tokens.length === 2) {
       const [operator, token] = tokens
-      if (operator.type === 'PunctuatorToken' && binaryOperators.includes(operator.value) && !isToken(token)) {
+      if (operator.type === 'PunctuatorToken' && prefixBinaryOperators.includes(operator.value) && !isToken(token)) {
         return {
           type: 'UnaryExpression',
           operator: operator.value as UnaryOperator,
           argument: token,
+          range: [operator.range[0], token.range[1]]
+        }
+      }
+      if (token.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(token.value) && !isToken(operator)) {
+        return {
+          type: 'UnaryExpression',
+          operator: '%',
+          argument: operator,
           range: [operator.range[0], token.range[1]]
         }
       }
@@ -72,6 +80,9 @@ class Parser {
             range
           }
         }
+      } else if (right.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(right.value)) {
+        const expression = this.parseExpression([operator, right])
+        return this.parseExpression([left, expression])
       }
     }
 
@@ -203,7 +214,8 @@ const priorizedBinaryOperators = [
   ['||']
 ]
 
-const binaryOperators = ['+', '-', '!', '~']
+const prefixBinaryOperators = ['+', '-', '!', '~']
+const postfixBinaryOpeators = ['%']
 
 function isToken(token: Token | Expression): token is EOFToken | PunctuatorToken | KeywordToken {
   return token.type === 'EOFToken'
