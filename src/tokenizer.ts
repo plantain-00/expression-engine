@@ -90,7 +90,7 @@ class Tokenizer {
     }
   }
 
-  private nextIdentifierToken(): BooleanLiteral | Identifier | KeywordToken {
+  private nextIdentifierToken(): KeywordTokens {
     const index = this.findEndOfIdentifier()
     if (index === undefined) {
       const range: [number, number] = [this.index, this.source.length]
@@ -104,7 +104,7 @@ class Tokenizer {
     return token
   }
 
-  private getExplicitIdentifierToken(tokenName: string, range: [number, number]): BooleanLiteral | Identifier | KeywordToken {
+  private getExplicitIdentifierToken(tokenName: string, range: [number, number]): KeywordTokens {
     if (tokenName === 'true' || tokenName === 'false') {
       return {
         type: 'BooleanLiteral',
@@ -116,6 +116,27 @@ class Tokenizer {
       return {
         type: 'KeywordToken',
         name: tokenName,
+        range
+      }
+    }
+    if (tokenName === 'and') {
+      return {
+        type: 'PunctuatorToken',
+        value: '&&',
+        range
+      }
+    }
+    if (tokenName === 'or') {
+      return {
+        type: 'PunctuatorToken',
+        value: '||',
+        range
+      }
+    }
+    if (tokenName === 'not') {
+      return {
+        type: 'PunctuatorToken',
+        value: '!',
         range
       }
     }
@@ -193,3 +214,5 @@ class Tokenizer {
 }
 
 const punctuators = ['+', '-', '*', '/', '%', '(', ')', '>', '<', '=', '!', '&', '|', '?', ':', '[', ']', ',', '~']
+
+type KeywordTokens = BooleanLiteral | Identifier | KeywordToken | PunctuatorToken
