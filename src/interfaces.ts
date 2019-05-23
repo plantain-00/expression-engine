@@ -48,6 +48,8 @@ export type Expression =
   | UnaryExpression
   | ThisExpression
   | BooleanLiteral
+  | ArrayExpression
+  | ObjectExpression
 
 /**
  * @public
@@ -55,6 +57,31 @@ export type Expression =
 export interface NumericLiteral extends Node {
   type: 'NumericLiteral'
   value: number
+}
+
+/**
+ * @public
+ */
+export interface ArrayExpression extends Node {
+  type: 'ArrayExpression'
+  elements: Expression[]
+}
+
+/**
+ * @public
+ */
+export interface ObjectExpression extends Node {
+  type: 'ObjectExpression'
+  properties: Property[]
+}
+
+/**
+ * @public
+ */
+export interface Property extends Node {
+  type: 'Property'
+  key: NumericLiteral | StringLiteral | Identifier
+  value: Expression
 }
 
 /**

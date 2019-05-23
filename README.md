@@ -31,6 +31,8 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + numeric literal: 123
 + string literal: 'abc' "abc"
 + boolean literal: true false
++ array literal: [a, b]
++ object literal: { a: 1 }
 
 + group: ( )
 + member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b
@@ -50,8 +52,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123_456
 + plugin?
 + & | ^ << >> >>>
-+ array literal
-+ object literal
 + spread
 + template string
 + null
@@ -61,4 +61,5 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123n
 + 2e2
 + |>
++ short-hand object literal
 + improve performance

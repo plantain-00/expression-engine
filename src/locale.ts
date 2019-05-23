@@ -6,7 +6,9 @@ export const defaultLocale = {
   expect: 'Expect {0}: {1}',
   unexpectToken: 'Unexpected token: {0} {1}',
   expectUnaryOperator: 'Expect unary operator: {0}',
-  expectConditionalOperator: 'Expect conditional operator: {0} {1}'
+  expectConditionalOperator: 'Expect conditional operator: {0} {1}',
+  invalidPropertyName: 'Invalid property name: {0}',
+  emptyExpression: 'Empty expression'
 }
 
 export type Locale = typeof defaultLocale

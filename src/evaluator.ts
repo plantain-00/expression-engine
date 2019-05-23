@@ -60,6 +60,17 @@ class Evaluator {
     if (expression.type === 'BooleanLiteral') {
       return expression.value
     }
+    if (expression.type === 'ArrayExpression') {
+      return expression.elements.map((e) => this.evalutate(e, context, true))
+    }
+    if (expression.type === 'ObjectExpression') {
+      const result: { [name: string]: unknown } = {}
+      for (const property of expression.properties) {
+        const key = property.key.type === 'Identifier' ? property.key.name : property.key.value
+        result[key] = this.evalutate(property.value, context, true)
+      }
+      return result
+    }
     throw new Error(this.locale.unexpectToken)
   }
 

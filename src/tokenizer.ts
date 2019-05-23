@@ -213,6 +213,6 @@ class Tokenizer {
   }
 }
 
-const punctuators = ['+', '-', '*', '/', '%', '(', ')', '>', '<', '=', '!', '&', '|', '?', ':', '[', ']', ',', '~']
+const punctuators = ['+', '-', '*', '/', '%', '(', ')', '>', '<', '=', '!', '&', '|', '?', ':', '[', ']', ',', '~', '{', '}']
 
 type KeywordTokens = BooleanLiteral | Identifier | KeywordToken | PunctuatorToken
