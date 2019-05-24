@@ -105,29 +105,36 @@ class Parser {
     let keyTokens: Array<Token | Expression> = []
     let valueTokens: Array<Token | Expression> = []
     let keyPart = true
+    const saveTokens = (...token: Array<Token | Expression>) => {
+      if (keyPart) {
+        keyTokens.push(...token)
+      } else {
+        valueTokens.push(...token)
+      }
+    }
     for (let j = 1; j < tokens.length - 1; j++) {
       const token = tokens[j]
       if (token.type === 'PunctuatorToken') {
-        if (token.value === ',') {
-          propertyExpressions.push(this.ParseProperty(keyTokens, valueTokens))
+        if (groupStarts.includes(token.value)) {
+          const groupEnd = this.findGroupEnd(tokens, j, token.value)
+          saveTokens(...tokens.filter((_, i) => i >= j && i <= groupEnd))
+          j = groupEnd
+        } else if (token.value === ',') {
+          propertyExpressions.push(this.parseProperty(keyTokens, valueTokens))
           keyTokens = []
           valueTokens = []
           keyPart = true
         } else if (token.value === ':') {
           keyPart = false
-        } else if (keyPart) {
-          keyTokens.push(token)
         } else {
-          valueTokens.push(token)
+          saveTokens(token)
         }
-      } else if (keyPart) {
-        keyTokens.push(token)
       } else {
-        valueTokens.push(token)
+        saveTokens(token)
       }
     }
     if (keyTokens.length > 0) {
-      propertyExpressions.push(this.ParseProperty(keyTokens, valueTokens))
+      propertyExpressions.push(this.parseProperty(keyTokens, valueTokens))
     }
     return {
       type: 'ObjectExpression',
@@ -136,7 +143,7 @@ class Parser {
     }
   }
 
-  private ParseProperty(keyTokens: Array<Token | Expression>, valueTokens: Array<Token | Expression>): Property {
+  private parseProperty(keyTokens: Array<Token | Expression>, valueTokens: Array<Token | Expression>): Property {
     const key = this.parseExpression(keyTokens)
     if (key.type !== 'Identifier' && key.type !== 'StringLiteral' && key.type !== 'NumericLiteral') {
       throw new Error(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]))
@@ -165,7 +172,7 @@ class Parser {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && token.value === '(') {
-        const index = this.findGroupEnd(tokens, i + 1, '(', ')')
+        const index = this.findGroupEnd(tokens, i, token.value)
         const isFunctionCall = this.hasPreviousExpression(tokens, i)
         if (isFunctionCall) {
           newTokens.push(token)
@@ -185,7 +192,7 @@ class Parser {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && token.value === '[') {
-        const index = this.findGroupEnd(tokens, i + 1, '[', ']')
+        const index = this.findGroupEnd(tokens, i, token.value)
         const isMemberAccess = this.hasPreviousExpression(tokens, i)
         if (isMemberAccess) {
           newTokens.push(token)
@@ -247,7 +254,7 @@ class Parser {
           newTokens.push(this.parseExpression([object, token, tokens[i + 1]]))
           i++
         } else if (token.value === '[') {
-          const index = this.findGroupEnd(tokens, i + 1, '[', ']')
+          const index = this.findGroupEnd(tokens, i, token.value)
           const object = newTokens.pop()!
           const property = this.parseExpression(tokens.filter((_, j) => j > i && j < index))
           newTokens.push({
@@ -258,7 +265,7 @@ class Parser {
           })
           i = index
         } else if (token.value === '(') {
-          const index = this.findGroupEnd(tokens, i + 1, '(', ')')
+          const index = this.findGroupEnd(tokens, i, token.value)
           const argumentsExpressions = this.parseItems(tokens, i, index)
           const lastToken = newTokens.pop()!
           newTokens.push({
@@ -326,9 +333,17 @@ class Parser {
     let itemTokens: Array<Token | Expression> = []
     for (let j = startMarkIndex + 1; j < endMarkIndex; j++) {
       const item = tokens[j]
-      if (item.type === 'PunctuatorToken' && item.value === ',') {
-        itemExpressions.push(this.parseExpression(itemTokens))
-        itemTokens = []
+      if (item.type === 'PunctuatorToken') {
+        if (groupStarts.includes(item.value)) {
+          const groupEnd = this.findGroupEnd(tokens, j, item.value)
+          itemTokens.push(...tokens.filter((_, i) => i >= j && i <= groupEnd))
+          j = groupEnd
+        } else if (item.value === ',') {
+          itemExpressions.push(this.parseExpression(itemTokens))
+          itemTokens = []
+        } else {
+          itemTokens.push(item)
+        }
       } else {
         itemTokens.push(item)
       }
@@ -357,9 +372,10 @@ class Parser {
     return isToken(token) ? this.parseExpression([token]) : token
   }
 
-  private findGroupEnd(tokens: Array<Token | Expression>, start: number, startMark: string, endMark: string) {
+  private findGroupEnd(tokens: Array<Token | Expression>, start: number, startMark: string) {
+    const endMark = groupEnds[startMark]
     let count = 1
-    for (let i = start; i < tokens.length; i++) {
+    for (let i = start + 1; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken') {
         if (token.value === startMark) {
@@ -390,6 +406,14 @@ const prefixBinaryOperators = ['+', '-', '!', '~']
 const postfixBinaryOpeators = ['%']
 
 const callOperators = ['.', '?.']
+
+const groupEnds: { [start: string]: string } = {
+  '{': '}',
+  '[': ']',
+  '(': ')'
+}
+
+const groupStarts = Object.keys(groupEnds)
 
 function isToken(token: Token | Expression): token is EOFToken | PunctuatorToken | KeywordToken {
   return token.type === 'EOFToken'
