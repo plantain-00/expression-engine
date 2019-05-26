@@ -1,10 +1,11 @@
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const tokens = tokenizeExpression(`b({ a: { c: 1 } })`)
+const tokens = tokenizeExpression(`a << b`)
 console.info(tokens)
 const ast = parseExpression(tokens)
 console.info(JSON.stringify(ast, null, 2))
 const result = evaluateExpression(ast, {
-  b: (c: any) => c.a
+  a: 1,
+  b: 2
 })
 console.info(result)

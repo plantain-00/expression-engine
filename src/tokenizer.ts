@@ -71,6 +71,17 @@ class Tokenizer {
           c += '='
           this.index++
         }
+      } else if (c === '>' && this.source[this.index + 1] === '>') {
+        if (this.source[this.index + 2] === '>') {
+          c += '>>'
+          this.index += 2
+        } else {
+          c += '>'
+          this.index++
+        }
+      } else if (c === '<' && this.source[this.index + 1] === '<') {
+        c += '<'
+        this.index++
       }
     } else if ((c === '&' || c === '|') && this.source[this.index + 1] === c) {
       c += c
@@ -213,6 +224,16 @@ class Tokenizer {
   }
 }
 
-const punctuators = ['+', '-', '*', '/', '%', '(', ')', '>', '<', '=', '!', '&', '|', '?', ':', '[', ']', ',', '~', '{', '}']
+const punctuators = [
+  '(', ')',
+  '[', ']',
+  '{', '}',
+  '*', '/', '%',
+  '+', '-',
+  '>', '<', '=', '!',
+  '&', '^', '|',
+  '?', ':',
+  ',', '~'
+]
 
 type KeywordTokens = BooleanLiteral | Identifier | KeywordToken | PunctuatorToken

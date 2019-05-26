@@ -6,7 +6,7 @@ export default {
   plugins: [resolve({ browser: true }), uglify()],
   output: {
     name: 'ExpressionEngine',
-    file: 'dist/ExpressionEngine.min.js',
+    file: 'dist/expression-engine.min.js',
     format: 'umd'
   }
 }

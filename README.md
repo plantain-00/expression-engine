@@ -41,9 +41,13 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + binary expression: **
 + binary expression: * / %
 + binary expression: + -
++ binary expression: << >> >>>
 + binary expression: > < >= <=
 + binary expression: == != === !==
 + binary expression: && and
++ binary expression: &
++ binary expression: ^
++ binary expression: |
 + binary expression: || ?? or
 + condition expression: a ? b : c
 
@@ -51,7 +55,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 
 + 123_456
 + plugin?
-+ & | ^ << >> >>>
 + spread
 + template string
 + null
