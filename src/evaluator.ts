@@ -57,6 +57,9 @@ class Evaluator {
     if (expression.type === 'StringLiteral') {
       return expression.value
     }
+    if (expression.type === 'NullLiteral') {
+      return null
+    }
     if (expression.type === 'BooleanLiteral') {
       return expression.value
     }

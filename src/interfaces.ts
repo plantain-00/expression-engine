@@ -1,7 +1,15 @@
 /**
  * @public
  */
-export type Token = BooleanLiteral | EOFToken | Identifier | KeywordToken | NumericLiteral | PunctuatorToken | StringLiteral
+export type Token =
+  | BooleanLiteral
+  | EOFToken
+  | Identifier
+  | KeywordToken
+  | NumericLiteral
+  | PunctuatorToken
+  | StringLiteral
+  | NullLiteral
 
 /**
  * @public
@@ -50,6 +58,7 @@ export type Expression =
   | BooleanLiteral
   | ArrayExpression
   | ObjectExpression
+  | NullLiteral
 
 /**
  * @public
@@ -57,6 +66,13 @@ export type Expression =
 export interface NumericLiteral extends Node {
   type: 'NumericLiteral'
   value: number
+}
+
+/**
+ * @public
+ */
+export interface NullLiteral extends Node {
+  type: 'NullLiteral'
 }
 
 /**

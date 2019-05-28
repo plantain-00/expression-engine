@@ -1,4 +1,4 @@
-import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral, Locale, getLocale, replaceLocaleParameters } from '.'
+import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral, Locale, getLocale, replaceLocaleParameters, NullLiteral } from '.'
 
 /**
  * @public
@@ -130,6 +130,12 @@ class Tokenizer {
         range
       }
     }
+    if (tokenName === 'null') {
+      return {
+        type: 'NullLiteral',
+        range
+      }
+    }
     if (tokenName === 'and') {
       return {
         type: 'PunctuatorToken',
@@ -236,4 +242,9 @@ const punctuators = [
   ',', '~'
 ]
 
-type KeywordTokens = BooleanLiteral | Identifier | KeywordToken | PunctuatorToken
+type KeywordTokens =
+  | BooleanLiteral |
+  Identifier
+  | KeywordToken
+  | PunctuatorToken
+  | NullLiteral

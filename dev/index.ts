@@ -1,6 +1,6 @@
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const tokens = tokenizeExpression(`a << b`)
+const tokens = tokenizeExpression(`null`)
 console.info(tokens)
 const ast = parseExpression(tokens)
 console.info(JSON.stringify(ast, null, 2))

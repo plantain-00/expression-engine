@@ -33,6 +33,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + boolean literal: true false
 + array literal: [a, b]
 + object literal: { a: 1 }
++ null literal
 
 + group: ( )
 + member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b
@@ -57,8 +58,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + plugin?
 + spread
 + template string
-+ null
-+ undefined
 + regex literal
 + 0x 0o 0b
 + 123n
