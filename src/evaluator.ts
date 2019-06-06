@@ -35,7 +35,14 @@ class Evaluator {
     }
     if (expression.type === 'CallExpression') {
       const callee = this.evalutate(expression.callee, context, true) as (...args: unknown[]) => unknown
-      const args = expression.arguments.map((a) => this.evalutate(a, context, true))
+      const args: unknown[] = []
+      for (const a of expression.arguments) {
+        if (a.type === 'SpreadElement') {
+          args.push(...this.evalutate(a.argument, context, true) as unknown[])
+        } else {
+          args.push(this.evalutate(a, context, true))
+        }
+      }
       return callee(...args)
     }
     if (expression.type === 'LogicalExpression') {
@@ -64,7 +71,15 @@ class Evaluator {
       return expression.value
     }
     if (expression.type === 'ArrayExpression') {
-      return expression.elements.map((e) => this.evalutate(e, context, true))
+      const items: unknown[] = []
+      for (const e of expression.elements) {
+        if (e.type === 'SpreadElement') {
+          items.push(...this.evalutate(e.argument, context, true) as unknown[])
+        } else {
+          items.push(this.evalutate(e, context, true))
+        }
+      }
+      return items
     }
     if (expression.type === 'ObjectExpression') {
       const result: { [name: string]: unknown } = {}

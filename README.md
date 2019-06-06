@@ -31,12 +31,12 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + numeric literal: 123
 + string literal: 'abc' "abc"
 + boolean literal: true false
-+ array literal: [a, b]
++ array literal: [a, b] [a, ...b]
 + object literal: { a: 1 }
 + null literal
 
 + group: ( )
-+ member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b
++ member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b a(...b)
 + unary expression: %
 + unary expression: + - ! ~ not
 + binary expression: **
@@ -56,7 +56,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 
 + 123_456
 + plugin?
-+ spread
++ object spread
 + template string
 + regex literal
 + 0x 0o 0b
@@ -65,3 +65,4 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + |>
 + short-hand object literal
 + improve performance
++ arrow function expression

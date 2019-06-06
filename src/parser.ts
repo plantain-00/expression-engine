@@ -14,7 +14,8 @@ import {
   BinaryExpression,
   MemberExpression,
   Property,
-  ObjectExpression
+  ObjectExpression,
+  SpreadElement
 } from '.'
 
 /**
@@ -329,7 +330,7 @@ class Parser {
   }
 
   private parseItems(tokens: Array<Token | Expression>, startMarkIndex: number, endMarkIndex: number) {
-    const itemExpressions: Expression[] = []
+    const itemExpressions: (Expression | SpreadElement)[] = []
     let itemTokens: Array<Token | Expression> = []
     for (let j = startMarkIndex + 1; j < endMarkIndex; j++) {
       const item = tokens[j]
@@ -339,7 +340,7 @@ class Parser {
           itemTokens.push(...tokens.filter((_, i) => i >= j && i <= groupEnd))
           j = groupEnd
         } else if (item.value === ',') {
-          itemExpressions.push(this.parseExpression(itemTokens))
+          itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens))
           itemTokens = []
         } else {
           itemTokens.push(item)
@@ -349,9 +350,23 @@ class Parser {
       }
     }
     if (itemTokens.length > 0) {
-      itemExpressions.push(this.parseExpression(itemTokens))
+      itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens))
     }
     return itemExpressions
+  }
+
+  private parseMayBeSpreadExpression(itemTokens: Array<Token | Expression>): Expression | SpreadElement {
+    if (itemTokens.length === 2) {
+      const [operator, token] = itemTokens
+      if (operator.type === 'PunctuatorToken' && operator.value === '...' && !isToken(token)) {
+        return {
+          type: 'SpreadElement',
+          argument: token,
+          range: [operator.range[0], token.range[1]]
+        }
+      }
+    }
+    return this.parseExpression(itemTokens)
   }
 
   private parseConditionalExpression(tokens: Array<Token | Expression>): Expression {

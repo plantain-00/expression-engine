@@ -43,13 +43,15 @@ class Tokenizer {
       } else if (c === '"' || c === "'") {
         this.previousToken = this.nextStringToken(c)
       } else if ((c === '.')) {
-        if ((this.previousToken.type === 'EOFToken' || this.previousToken.type === 'PunctuatorToken')) {
+        if (this.source[this.index + 1] === '.' && this.source[this.index + 2] === '.') {
+          this.previousToken = this.nextPunctuator(c)
+        } else if ((this.previousToken.type === 'EOFToken' || this.previousToken.type === 'PunctuatorToken')) {
           this.previousToken = this.nextNumericToken(true)
         } else {
           this.previousToken = this.nextPunctuator(c)
         }
       } else if ((c >= '0' && c <= '9')) {
-        this.previousToken = this.nextNumericToken(c === '.')
+        this.previousToken = this.nextNumericToken(false)
       } else if (punctuators.includes(c)) {
         this.previousToken = this.nextPunctuator(c)
       } else {
@@ -92,6 +94,9 @@ class Tokenizer {
     } else if (c === '?' && (this.source[this.index + 1] === '.' || this.source[this.index + 1] === '?')) {
       c += this.source[this.index + 1]
       this.index++
+    } else if (c === '.' && this.source[this.index + 1] === '.' && this.source[this.index + 1] === '.') {
+      c += '..'
+      this.index += 2
     }
     this.index++
     return {

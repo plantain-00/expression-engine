@@ -80,7 +80,7 @@ export interface NullLiteral extends Node {
  */
 export interface ArrayExpression extends Node {
   type: 'ArrayExpression'
-  elements: Expression[]
+  elements: (Expression | SpreadElement)[]
 }
 
 /**
@@ -121,7 +121,15 @@ export type LogicalOperator = '||' | '&&'
 export interface CallExpression extends Node {
   type: 'CallExpression'
   callee: Expression
-  arguments: Expression[]
+  arguments: (Expression | SpreadElement)[]
+}
+
+/**
+ * @public
+ */
+export interface SpreadElement extends Node {
+  type: 'SpreadElement'
+  argument: Expression
 }
 
 /**
