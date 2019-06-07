@@ -102,7 +102,7 @@ class Parser {
   }
 
   private parseObjectLiteral(tokens: Array<Token | Expression>): ObjectExpression {
-    const propertyExpressions: Property[] = []
+    const propertyExpressions: (Property | SpreadElement)[] = []
     let keyTokens: Array<Token | Expression> = []
     let valueTokens: Array<Token | Expression> = []
     let keyPart = true
@@ -144,7 +144,17 @@ class Parser {
     }
   }
 
-  private parseProperty(keyTokens: Array<Token | Expression>, valueTokens: Array<Token | Expression>): Property {
+  private parseProperty(keyTokens: Array<Token | Expression>, valueTokens: Array<Token | Expression>): Property | SpreadElement {
+    if (keyTokens.length === 2 && valueTokens.length === 0) {
+      const [operator, token] = keyTokens
+      if (operator.type === 'PunctuatorToken' && operator.value === '...' && !isToken(token)) {
+        return {
+          type: 'SpreadElement',
+          argument: token,
+          range: [operator.range[0], token.range[1]]
+        }
+      }
+    }
     const key = this.parseExpression(keyTokens)
     if (key.type !== 'Identifier' && key.type !== 'StringLiteral' && key.type !== 'NumericLiteral') {
       throw new Error(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]))

@@ -88,7 +88,7 @@ export interface ArrayExpression extends Node {
  */
 export interface ObjectExpression extends Node {
   type: 'ObjectExpression'
-  properties: Property[]
+  properties: (Property | SpreadElement)[]
 }
 
 /**

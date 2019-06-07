@@ -84,8 +84,12 @@ class Evaluator {
     if (expression.type === 'ObjectExpression') {
       const result: { [name: string]: unknown } = {}
       for (const property of expression.properties) {
-        const key = property.key.type === 'Identifier' ? property.key.name : property.key.value
-        result[key] = this.evalutate(property.value, context, true)
+        if (property.type === 'Property') {
+          const key = property.key.type === 'Identifier' ? property.key.name : property.key.value
+          result[key] = this.evalutate(property.value, context, true)
+        } else {
+          Object.assign(result, this.evalutate(property.argument, context, true))
+        }
       }
       return result
     }
