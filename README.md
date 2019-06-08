@@ -65,5 +65,3 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + short-hand object literal
 + improve performance
 + arrow function expression
-+ empty object literal
-+ empty array literal

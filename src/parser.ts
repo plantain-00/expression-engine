@@ -15,7 +15,8 @@ import {
   MemberExpression,
   Property,
   ObjectExpression,
-  SpreadElement
+  SpreadElement,
+  ArrayExpression
 } from '.'
 
 /**
@@ -310,8 +311,23 @@ class Parser {
     return this.parseExpression(newTokens)
   }
 
-  private parseUnaryExpression(tokens: Array<Token | Expression>): UnaryExpression {
+  private parseUnaryExpression(tokens: Array<Token | Expression>): UnaryExpression | ArrayExpression | ObjectExpression {
     const [operator, token] = tokens
+    if (operator.type === 'PunctuatorToken' && token.type === 'PunctuatorToken') {
+      if (operator.value === '[' && token.value === ']') {
+        return {
+          type: 'ArrayExpression',
+          elements: [],
+          range: [operator.range[0], token.range[1]]
+        }
+      } else if (operator.value === '{' && token.value === '}') {
+        return {
+          type: 'ObjectExpression',
+          properties: [],
+          range: [operator.range[0], token.range[1]]
+        }
+      }
+    }
     if (operator.type === 'PunctuatorToken' && prefixBinaryOperators.includes(operator.value) && !isToken(token)) {
       return {
         type: 'UnaryExpression',

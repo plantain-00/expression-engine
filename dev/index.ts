@@ -2,7 +2,7 @@ import { parseExpressionAt } from 'acorn'
 
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const expression = `{a: 1, ...b}`
+const expression = `{}`
 console.info(JSON.stringify(parseExpressionAt(expression), null, 2))
 const tokens = tokenizeExpression(expression)
 console.info(tokens)
