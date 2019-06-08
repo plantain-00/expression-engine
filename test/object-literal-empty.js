@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'object literal empty'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`{}`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`{}`, t)
   const result = evaluateExpression(ast, {})
   t.snapshot({ tokens, ast, result }, { id: title })
 })

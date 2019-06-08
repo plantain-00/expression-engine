@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'member expression'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`a.b.c + 1`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`a.b.c + 1`, t)
   const result = evaluateExpression(ast, {
     a: {
       b: {

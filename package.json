@@ -49,5 +49,11 @@
   "types": "nodejs/index.d.ts",
   "typeCoverage": {
     "atLeast": 100
+  },
+  "ava": {
+    "files": [
+      "test/**/*",
+      "!test/utils.js"
+    ]
   }
 }
