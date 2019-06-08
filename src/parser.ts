@@ -159,10 +159,20 @@ class Parser {
     if (key.type !== 'Identifier' && key.type !== 'StringLiteral' && key.type !== 'NumericLiteral') {
       throw new Error(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]))
     }
+    if (valueTokens.length === 0) {
+      return {
+        type: 'Property',
+        key,
+        shorthand: true,
+        value: key,
+        range: key.range
+      }
+    }
     const value = this.parseExpression(valueTokens, getTokensRange(valueTokens))
     return {
       type: 'Property',
       key,
+      shorthand: false,
       value,
       range: [key.range[0], value.range[1]]
     }

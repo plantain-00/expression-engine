@@ -98,6 +98,7 @@ export interface Property extends Node {
   type: 'Property'
   key: NumericLiteral | StringLiteral | Identifier
   value: Expression
+  shorthand: boolean
 }
 
 /**

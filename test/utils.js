@@ -34,8 +34,7 @@ const properties = [
   'extra',
   'prefix',
   'computed',
-  'method',
-  'shorthand'
+  'method'
 ]
 
 function transformAst (expression) {
