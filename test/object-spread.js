@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'object spread'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`{a: 1, ...b}`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`{a: 1, ...b}`, t)
   const result = evaluateExpression(ast, {
     b: {
       c: 1

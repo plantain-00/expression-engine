@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'logical expression'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`a > 1 && a < 3 ? 4 : 5`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`a > 1 && a < 3 ? 4 : 5`, t)
   const result = evaluateExpression(ast, {
     a: 2
   })

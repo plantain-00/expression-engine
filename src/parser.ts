@@ -23,7 +23,7 @@ import {
  * @public
  */
 export function parseExpression(tokens: Token[], locale?: Locale): Expression {
-  return new Parser(locale).parseExpression(tokens)
+  return new Parser(locale).parseExpression(tokens, getTokensRange(tokens))
 }
 
 class Parser {
@@ -33,7 +33,7 @@ class Parser {
   private locale: Locale
 
   // tslint:disable-next-line:cognitive-complexity
-  parseExpression(tokens: Array<Token | Expression>): Expression {
+  parseExpression(tokens: Array<Token | Expression>, range: [number, number]): Expression {
     if (tokens.length === 0) {
       throw new Error(this.locale.emptyExpression)
     }
@@ -43,7 +43,7 @@ class Parser {
     }
 
     if (tokens.length === 2) {
-      return this.parseUnaryExpression(tokens)
+      return this.parseUnaryExpression(tokens, range)
     }
 
     const firstToken = tokens[0]
@@ -52,12 +52,11 @@ class Parser {
       && firstToken.value === '{'
       && lastToken.type === 'PunctuatorToken'
       && lastToken.value === '}') {
-      return this.parseObjectLiteral(tokens)
+      return this.parseObjectLiteral(tokens, range)
     }
 
     if (tokens.length === 3) {
       const [left, operator, right] = tokens
-      const range: [number, number] = [left.range[0], right.range[1]]
       if (operator.type === 'PunctuatorToken') {
         if (callOperators.includes(operator.value)) {
           return this.parseMemberExpression(left, operator, right, range)
@@ -66,22 +65,22 @@ class Parser {
           return this.parseBinaryExpression(left, operator, right, range)
         }
       } else if (right.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(right.value)) {
-        const expression = this.parseExpression([operator, right])
-        return this.parseExpression([left, expression])
+        const expression = this.parseExpression([operator, right], [operator.range[0], range[1]])
+        return this.parseExpression([left, expression], range)
       }
     }
 
     if (tokens.some((t) => t.type === 'PunctuatorToken' && t.value === '(')) {
       const newTokens = this.parseGroup(tokens)
       if (newTokens.length !== tokens.length) {
-        return this.parseExpression(newTokens)
+        return this.parseExpression(newTokens, getTokensRange(tokens))
       }
     }
 
     if (tokens.some((t) => t.type === 'PunctuatorToken' && t.value === '[')) {
       const newTokens = this.parseArrayLiteral(tokens)
       if (newTokens.length !== tokens.length) {
-        return this.parseExpression(newTokens)
+        return this.parseExpression(newTokens, getTokensRange(tokens))
       }
     }
 
@@ -91,18 +90,18 @@ class Parser {
 
     for (const operators of priorizedBinaryOperators) {
       if (tokens.some((t) => t.type === 'PunctuatorToken' && operators.includes(t.value))) {
-        return this.parsePreviousExpression(tokens, operators)
+        return this.parsePreviousExpression(tokens, operators, range)
       }
     }
 
     if (tokens.length === 5) {
-      return this.parseConditionalExpression(tokens)
+      return this.parseConditionalExpression(tokens, range)
     }
 
-    throw new Error(replaceLocaleParameters(this.locale.unexpectToken, tokens[0].range[0], tokens[tokens.length - 1].range[1]))
+    throw new Error(replaceLocaleParameters(this.locale.unexpectToken, range[0], range[1]))
   }
 
-  private parseObjectLiteral(tokens: Array<Token | Expression>): ObjectExpression {
+  private parseObjectLiteral(tokens: Array<Token | Expression>, range: [number, number]): ObjectExpression {
     const propertyExpressions: (Property | SpreadElement)[] = []
     let keyTokens: Array<Token | Expression> = []
     let valueTokens: Array<Token | Expression> = []
@@ -141,7 +140,7 @@ class Parser {
     return {
       type: 'ObjectExpression',
       properties: propertyExpressions,
-      range: [tokens[0].range[0], tokens[tokens.length - 1].range[1]]
+      range
     }
   }
 
@@ -156,11 +155,11 @@ class Parser {
         }
       }
     }
-    const key = this.parseExpression(keyTokens)
+    const key = this.parseExpression(keyTokens, getTokensRange(keyTokens))
     if (key.type !== 'Identifier' && key.type !== 'StringLiteral' && key.type !== 'NumericLiteral') {
       throw new Error(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]))
     }
-    const value = this.parseExpression(valueTokens)
+    const value = this.parseExpression(valueTokens, getTokensRange(valueTokens))
     return {
       type: 'Property',
       key,
@@ -170,13 +169,16 @@ class Parser {
   }
 
   private parseMemberExpression(left: Token | Expression, operator: PunctuatorToken, right: Token | Expression, range: [number, number]): MemberExpression {
-    return {
+    const expression: MemberExpression = {
       type: 'MemberExpression',
       object: this.parseTokenOrExpression(left),
       property: this.parseTokenOrExpression(right),
-      optional: operator.value === '?.',
       range
     }
+    if (operator.value === '?.') {
+      expression.optional = true
+    }
+    return expression
   }
 
   private parseGroup(tokens: Array<Token | Expression>) {
@@ -189,7 +191,8 @@ class Parser {
         if (isFunctionCall) {
           newTokens.push(token)
         } else {
-          newTokens.push(this.parseExpression(tokens.filter((_, j) => j > i && j < index)))
+          const newToken = tokens.filter((_, j) => j > i && j < index)
+          newTokens.push(this.parseExpression(newToken, getTokensRange(newToken)))
           i = index
         }
       } else {
@@ -263,12 +266,13 @@ class Parser {
       if (token.type === 'PunctuatorToken') {
         if (callOperators.includes(token.value)) {
           const object = newTokens.pop()!
-          newTokens.push(this.parseExpression([object, token, tokens[i + 1]]))
+          newTokens.push(this.parseExpression([object, token, tokens[i + 1]], getHeadTailRange(object, tokens[i + 1])))
           i++
         } else if (token.value === '[') {
           const index = this.findGroupEnd(tokens, i, token.value)
           const object = newTokens.pop()!
-          const property = this.parseExpression(tokens.filter((_, j) => j > i && j < index))
+          const groupedTokens = tokens.filter((_, j) => j > i && j < index)
+          const property = this.parseExpression(groupedTokens, getTokensRange(groupedTokens))
           newTokens.push({
             type: 'MemberExpression',
             object: this.parseTokenOrExpression(object),
@@ -282,7 +286,7 @@ class Parser {
           const lastToken = newTokens.pop()!
           newTokens.push({
             type: 'CallExpression',
-            callee: this.parseExpression([lastToken]),
+            callee: this.parseExpression([lastToken], lastToken.range),
             arguments: argumentsExpressions,
             range: [lastToken.range[0], tokens[index].range[1]]
           })
@@ -294,37 +298,54 @@ class Parser {
         newTokens.push(token)
       }
     }
-    return this.parseExpression(newTokens)
+    return this.parseExpression(newTokens, getTokensRange(newTokens))
   }
 
-  private parsePreviousExpression(tokens: Array<Token | Expression>, operators: string[]): Expression {
+  private parsePreviousExpression(
+    tokens: Array<Token | Expression>,
+    operators: string[],
+    range: [number, number]
+  ): Expression {
     const newTokens: Array<Token | Expression> = []
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && operators.includes(token.value)) {
-        newTokens.push(this.parseExpression([newTokens.pop()!, tokens[i], tokens[i + 1]]))
+        const previousToken = newTokens.pop()!
+        let newRange: [number, number]
+        if (i + 2 < tokens.length - 1) {
+          if (newTokens.length === 0) {
+            newRange = [range[0], tokens[i + 2].range[0] - 1]
+          } else {
+            newRange = [previousToken.range[0], tokens[i + 2].range[0] - 1]
+          }
+        } else if (i === tokens.length - 2) {
+          newRange = [previousToken.range[0], range[1]]
+        } else {
+          newRange = [previousToken.range[0], tokens[i + 1].range[1]]
+        }
+        newTokens.push(this.parseExpression([previousToken, tokens[i], tokens[i + 1]], newRange))
         i++
       } else {
         newTokens.push(token)
       }
     }
-    return this.parseExpression(newTokens)
+    return this.parseExpression(newTokens, range)
   }
 
-  private parseUnaryExpression(tokens: Array<Token | Expression>): UnaryExpression | ArrayExpression | ObjectExpression {
+  private parseUnaryExpression(tokens: Array<Token | Expression>, range: [number, number]): UnaryExpression | ArrayExpression | ObjectExpression {
     const [operator, token] = tokens
     if (operator.type === 'PunctuatorToken' && token.type === 'PunctuatorToken') {
       if (operator.value === '[' && token.value === ']') {
         return {
           type: 'ArrayExpression',
           elements: [],
-          range: [operator.range[0], token.range[1]]
+          range
         }
       } else if (operator.value === '{' && token.value === '}') {
         return {
           type: 'ObjectExpression',
           properties: [],
-          range: [operator.range[0], token.range[1]]
+          range
         }
       }
     }
@@ -333,7 +354,7 @@ class Parser {
         type: 'UnaryExpression',
         operator: operator.value as UnaryOperator,
         argument: token,
-        range: [operator.range[0], token.range[1]]
+        range
       }
     }
     if (token.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(token.value) && !isToken(operator)) {
@@ -341,10 +362,10 @@ class Parser {
         type: 'UnaryExpression',
         operator: '%',
         argument: operator,
-        range: [operator.range[0], token.range[1]]
+        range
       }
     }
-    throw new Error(replaceLocaleParameters(this.locale.expectUnaryOperator, operator.range[0]))
+    throw new Error(replaceLocaleParameters(this.locale.expectUnaryOperator, range[0]))
   }
 
   private hasPreviousExpression(tokens: Array<Token | Expression>, i: number) {
@@ -366,7 +387,7 @@ class Parser {
           itemTokens.push(...tokens.filter((_, i) => i >= j && i <= groupEnd))
           j = groupEnd
         } else if (item.value === ',') {
-          itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens))
+          itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens, getTokensRange(itemTokens)))
           itemTokens = []
         } else {
           itemTokens.push(item)
@@ -376,41 +397,42 @@ class Parser {
       }
     }
     if (itemTokens.length > 0) {
-      itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens))
+      itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens, getTokensRange(itemTokens)))
     }
     return itemExpressions
   }
 
-  private parseMayBeSpreadExpression(itemTokens: Array<Token | Expression>): Expression | SpreadElement {
+  private parseMayBeSpreadExpression(itemTokens: Array<Token | Expression>, range: [number, number]): Expression | SpreadElement {
     if (itemTokens.length === 2) {
       const [operator, token] = itemTokens
       if (operator.type === 'PunctuatorToken' && operator.value === '...' && !isToken(token)) {
         return {
           type: 'SpreadElement',
           argument: token,
-          range: [operator.range[0], token.range[1]]
+          range
         }
       }
     }
-    return this.parseExpression(itemTokens)
+    return this.parseExpression(itemTokens, range)
   }
 
-  private parseConditionalExpression(tokens: Array<Token | Expression>): Expression {
+  private parseConditionalExpression(tokens: Array<Token | Expression>, range: [number, number]): Expression {
     const [test, operator1, consequent, operator2, alternate] = tokens
     if (operator1.type === 'PunctuatorToken' && operator1.value === '?' && operator2.type === 'PunctuatorToken' && operator2.value === ':') {
+      test.range[1] = operator1.range[0] - 1
       return {
         type: 'ConditionalExpression',
         test: this.parseTokenOrExpression(test),
         consequent: this.parseTokenOrExpression(consequent),
         alternate: this.parseTokenOrExpression(alternate),
-        range: [test.range[0], alternate.range[1]]
+        range
       }
     }
     throw new Error(replaceLocaleParameters(this.locale.expectConditionalOperator, operator1.range[0], operator2.range[0]))
   }
 
   private parseTokenOrExpression(token: Token | Expression) {
-    return isToken(token) ? this.parseExpression([token]) : token
+    return isToken(token) ? this.parseExpression([token], token.range) : token
   }
 
   private findGroupEnd(tokens: Array<Token | Expression>, start: number, startMark: string) {
@@ -431,6 +453,14 @@ class Parser {
     }
     throw new Error(replaceLocaleParameters(this.locale.expect, endMark, start))
   }
+}
+
+function getTokensRange(tokens: (Token | Expression)[]): [number, number] {
+  return [tokens[0].range[0], tokens[tokens.length - 1].range[1]]
+}
+
+function getHeadTailRange(head: Token | Expression, tail: Token | Expression): [number, number] {
+  return [head.range[0], tail.range[1]]
 }
 
 const priorizedBinaryOperators = [

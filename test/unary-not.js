@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'unary expression not'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`!a`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`!a`, t)
   const result = evaluateExpression(ast, {
     a: true
   })

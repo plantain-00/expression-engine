@@ -1,12 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { evaluateExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const title = 'conditional expression'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`a.width > a.height ? 'row' : 'column'`)
-  const ast = parseExpression(tokens)
+  const { tokens, ast } = parseWithAcornToo(`a.width > a.height ? 'row' : 'column'`, t)
   const result = evaluateExpression(ast, {
     a: { width: 2, height: 1 }
   })

@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression } from '../dist/nodejs'
+import { parseWithAcornToo } from './utils'
 
 const expressions = [
   'a || b && c == g < h + j * k',
@@ -10,8 +10,7 @@ for (const expression of expressions) {
   const title = `complex: ${expression}`
 
   test(title, (t) => {
-    const tokens = tokenizeExpression(expression)
-    const ast = parseExpression(tokens)
+    const { tokens, ast } = parseWithAcornToo(expression, t)
     t.snapshot({ tokens, ast }, { id: title })
   })
 }
