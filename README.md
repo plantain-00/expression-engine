@@ -62,4 +62,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 123n
 + 2e2
 + |>
-+ arrow function expression
++ object pattern as function parameter
++ array pattern as function parameter
++ rest element as function parameter
++ assignment pattern as function parameter

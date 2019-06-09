@@ -93,6 +93,20 @@ class Evaluator {
       }
       return result
     }
+    if (expression.type === 'ArrowFunctionExpression') {
+      return (...params: unknown[]) => {
+        let newContext: { [name: string]: unknown }
+        if (params.length === 0) {
+          newContext = context
+        } else {
+          newContext = { ...context }
+          for (let i = 0; i < params.length && i < expression.params.length; i++) {
+            newContext[expression.params[i].name] = params[i]
+          }
+        }
+        return this.evalutate(expression.body, newContext, true)
+      }
+    }
     throw new Error(this.locale.unexpectToken)
   }
 

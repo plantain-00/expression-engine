@@ -34,7 +34,10 @@ const properties = [
   'extra',
   'prefix',
   'computed',
-  'method'
+  'method',
+  'id',
+  'generator',
+  'async'
 ]
 
 function transformAst (expression) {

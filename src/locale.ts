@@ -8,7 +8,8 @@ export const defaultLocale = {
   expectUnaryOperator: 'Expect unary operator: {0}',
   expectConditionalOperator: 'Expect conditional operator: {0} {1}',
   invalidPropertyName: 'Invalid property name: {0}',
-  emptyExpression: 'Empty expression'
+  emptyExpression: 'Empty expression',
+  invalidFunctionParameter: 'Invalid function parameter: {0}'
 }
 
 export type Locale = typeof defaultLocale

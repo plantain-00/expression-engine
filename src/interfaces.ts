@@ -59,6 +59,8 @@ export type Expression =
   | ArrayExpression
   | ObjectExpression
   | NullLiteral
+  | ArrowFunctionExpression
+  | FunctionParamsExpression
 
 /**
  * @public
@@ -206,6 +208,23 @@ export interface BinaryExpression extends Node {
   operator: BinaryOperator
   left: Expression
   right: Expression
+}
+
+/**
+ * @public
+ */
+export interface ArrowFunctionExpression extends Node {
+  type: 'ArrowFunctionExpression'
+  params: Identifier[]
+  body: Expression
+}
+
+/**
+ * @public
+ */
+export interface FunctionParamsExpression extends Node {
+  type: 'FunctionParamsExpression'
+  params: Identifier[]
 }
 
 /**

@@ -16,7 +16,9 @@ import {
   Property,
   ObjectExpression,
   SpreadElement,
-  ArrayExpression
+  ArrayExpression,
+  ArrowFunctionExpression,
+  FunctionParamsExpression
 } from '.'
 
 /**
@@ -60,6 +62,14 @@ class Parser {
       if (operator.type === 'PunctuatorToken') {
         if (callOperators.includes(operator.value)) {
           return this.parseMemberExpression(left, operator, right, range)
+        }
+        if (operator.value === '=>') {
+          return {
+            type: 'ArrowFunctionExpression',
+            params: left.type === 'FunctionParamsExpression' ? left.params : [ left],
+            body: right,
+            range
+          } as ArrowFunctionExpression
         }
         if (priorizedBinaryOperators.some((p) => p.some((c) => c === operator.value))) {
           return this.parseBinaryExpression(left, operator, right, range)
@@ -200,16 +210,40 @@ class Parser {
         const isFunctionCall = this.hasPreviousExpression(tokens, i)
         if (isFunctionCall) {
           newTokens.push(token)
-        } else {
-          const newToken = tokens.filter((_, j) => j > i && j < index)
-          newTokens.push(this.parseExpression(newToken, getTokensRange(newToken)))
-          i = index
+          continue
         }
+        const newToken = tokens.filter((_, j) => j > i && j < index)
+        i = index
+        if (isFunctionParameters(index, tokens)) {
+          newTokens.push(this.parseFunctionParameters(newToken, [token.range[0], tokens[index].range[1]]))
+          continue
+        }
+        newTokens.push(this.parseExpression(newToken, getTokensRange(newToken)))
       } else {
         newTokens.push(token)
       }
     }
     return newTokens
+  }
+
+  private parseFunctionParameters(tokens: (Token | Expression)[], range: [number, number]) {
+    const expression: FunctionParamsExpression = {
+      type: 'FunctionParamsExpression',
+      params: [],
+      range
+    }
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i]
+      if (i % 2 === 0) {
+        if (token.type !== 'Identifier') {
+          throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+        }
+        expression.params.push(token)
+      } else if (token.type !== 'PunctuatorToken' || token.value !== ',') {
+        throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+      }
+    }
+    return expression
   }
 
   private parseArrayLiteral(tokens: Array<Token | Expression>) {
@@ -471,6 +505,14 @@ function getTokensRange(tokens: (Token | Expression)[]): [number, number] {
 
 function getHeadTailRange(head: Token | Expression, tail: Token | Expression): [number, number] {
   return [head.range[0], tail.range[1]]
+}
+
+function isFunctionParameters(index: number, tokens: (Token | Expression)[]) {
+  if (index < tokens.length - 1) {
+    const nextToken = tokens[index + 1]
+    return nextToken.type === 'PunctuatorToken' && nextToken.value === '=>'
+  }
+  return false
 }
 
 const priorizedBinaryOperators = [
