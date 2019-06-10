@@ -101,7 +101,16 @@ class Evaluator {
         } else {
           newContext = { ...context }
           for (let i = 0; i < params.length && i < expression.params.length; i++) {
-            newContext[expression.params[i].name] = params[i]
+            const pattern = expression.params[i]
+            if (pattern.type === 'Identifier') {
+              newContext[pattern.name] = params[i]
+            } else {
+              if (params[i] === undefined) {
+                newContext[pattern.left.name] = this.evalutate(pattern.right, newContext, true)
+              } else {
+                newContext[pattern.left.name] = params[i]
+              }
+            }
           }
         }
         return this.evalutate(expression.body, newContext, true)

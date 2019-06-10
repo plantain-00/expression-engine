@@ -18,7 +18,8 @@ import {
   SpreadElement,
   ArrayExpression,
   ArrowFunctionExpression,
-  FunctionParamsExpression
+  FunctionParamsExpression,
+  Pattern
 } from '.'
 
 /**
@@ -66,7 +67,7 @@ class Parser {
         if (operator.value === '=>') {
           return {
             type: 'ArrowFunctionExpression',
-            params: left.type === 'FunctionParamsExpression' ? left.params : [ left],
+            params: left.type === 'FunctionParamsExpression' ? left.params : [left],
             body: right,
             range
           } as ArrowFunctionExpression
@@ -226,22 +227,47 @@ class Parser {
     return newTokens
   }
 
+  // tslint:disable-next-line:cognitive-complexity
   private parseFunctionParameters(tokens: (Token | Expression)[], range: [number, number]) {
     const expression: FunctionParamsExpression = {
       type: 'FunctionParamsExpression',
       params: [],
       range
     }
+    let pattern: Pattern | undefined
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
-      if (i % 2 === 0) {
+      if (pattern === undefined) {
         if (token.type !== 'Identifier') {
           throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
         }
-        expression.params.push(token)
-      } else if (token.type !== 'PunctuatorToken' || token.value !== ',') {
-        throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+        pattern = token
+        continue
       }
+      if (token.type === 'PunctuatorToken') {
+        if (token.value === ',') {
+          expression.params.push(pattern)
+          pattern = undefined
+          continue
+        }
+        if (token.value === '=' && pattern.type === 'Identifier' && i < tokens.length - 1) {
+          const nextToken = tokens[i + 1]
+          if (!isToken(nextToken)) {
+            i++
+            pattern = {
+              type: 'AssignmentPattern',
+              left: pattern,
+              right: nextToken,
+              range: [pattern.range[0], nextToken.range[1]]
+            }
+            continue
+          }
+        }
+      }
+      throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+    }
+    if (pattern) {
+      expression.params.push(pattern)
     }
     return expression
   }

@@ -215,8 +215,22 @@ export interface BinaryExpression extends Node {
  */
 export interface ArrowFunctionExpression extends Node {
   type: 'ArrowFunctionExpression'
-  params: Identifier[]
+  params: Pattern[]
   body: Expression
+}
+
+/**
+ * @public
+ */
+export type Pattern = Identifier | AssignmentPattern
+
+/**
+ * @public
+ */
+export interface AssignmentPattern extends Node {
+  type: 'AssignmentPattern'
+  left: Identifier
+  right: Expression
 }
 
 /**
@@ -224,7 +238,7 @@ export interface ArrowFunctionExpression extends Node {
  */
 export interface FunctionParamsExpression extends Node {
   type: 'FunctionParamsExpression'
-  params: Identifier[]
+  params: Pattern[]
 }
 
 /**

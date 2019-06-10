@@ -2,7 +2,7 @@ import { parseExpression as babelParseExpression } from '@babel/parser'
 
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const expression = `map([1, 2, 3], (a, i) => a * a + i)`
+const expression = `map([1, 2, undefined], (a = 1, i = 1) => a * a + i)`
 let babelStartMoment = process.hrtime.bigint()
 const acronResult = babelParseExpression(expression, { ranges: true })
 const babelTime = process.hrtime.bigint() - babelStartMoment
