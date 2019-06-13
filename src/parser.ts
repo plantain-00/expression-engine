@@ -239,6 +239,18 @@ class Parser {
       const token = tokens[i]
       if (pattern === undefined) {
         if (token.type !== 'Identifier') {
+          if (token.type === 'PunctuatorToken' && token.value === '...' && i < tokens.length - 1) {
+            const nextToken = tokens[i + 1]
+            if (nextToken.type === 'Identifier') {
+              i++
+              pattern = {
+                type: 'RestElement',
+                argument: nextToken,
+                range: [token.range[0], nextToken.range[1]]
+              }
+              continue
+            }
+          }
           throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
         }
         pattern = token

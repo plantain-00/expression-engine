@@ -222,7 +222,7 @@ export interface ArrowFunctionExpression extends Node {
 /**
  * @public
  */
-export type Pattern = Identifier | AssignmentPattern
+export type Pattern = Identifier | AssignmentPattern | RestElement
 
 /**
  * @public
@@ -231,6 +231,14 @@ export interface AssignmentPattern extends Node {
   type: 'AssignmentPattern'
   left: Identifier
   right: Expression
+}
+
+/**
+ * @public
+ */
+export interface RestElement extends Node {
+  type: 'RestElement'
+  argument: Identifier
 }
 
 /**

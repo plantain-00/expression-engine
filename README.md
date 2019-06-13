@@ -64,4 +64,3 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + |>
 + object pattern as function parameter
 + array pattern as function parameter
-+ rest element as function parameter

@@ -104,12 +104,14 @@ class Evaluator {
             const pattern = expression.params[i]
             if (pattern.type === 'Identifier') {
               newContext[pattern.name] = params[i]
-            } else {
+            } else if (pattern.type === 'AssignmentPattern') {
               if (params[i] === undefined) {
                 newContext[pattern.left.name] = this.evalutate(pattern.right, newContext, true)
               } else {
                 newContext[pattern.left.name] = params[i]
               }
+            } else {
+              newContext[pattern.argument.name] = params.slice(i)
             }
           }
         }
