@@ -185,8 +185,10 @@ class Tokenizer {
     return undefined
   }
 
+  // tslint:disable-next-line:cognitive-complexity
   private nextNumericToken(hasDecimalPoint: boolean): NumericLiteral {
     const startIndex = this.index
+    let letterRange = (a: string) => a >= '0' && a <= '9'
     for (let i = this.index + 1; i < this.source.length; i++) {
       const c = this.source[i]
       if (c === '.') {
@@ -194,7 +196,18 @@ class Tokenizer {
           throw new Error(replaceLocaleParameters(this.locale.multipleDecimalPoint, i))
         }
         hasDecimalPoint = true
-      } else if (c > '0' && c < '9') {
+      } else if (letterRange(c)) {
+        continue
+      } else if (i === 1
+        && this.source[0] === '0'
+        && (c === 'x' || c === 'X' || c === 'b' || c === 'B' || c === 'o' || c === 'O')) {
+        if (c === 'x' || c === 'X') {
+          letterRange = (a: string) => (a >= '0' && a <= '9') || (a >= 'a' && a <= 'f')
+        } else if (c === 'b' || c === 'B') {
+          letterRange = (a: string) => a >= '0' && a <= '1'
+        } else {
+          letterRange = (a: string) => a >= '0' && a <= '7'
+        }
         continue
       } else {
         const value = +this.source.substring(this.index, i)

@@ -28,7 +28,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 
 ## supported expression features(ordered by priority from high to low)
 
-+ numeric literal: 123
++ numeric literal: 123 0x123 0o123 0b101
 + string literal: 'abc' "abc"
 + boolean literal: true false
 + array literal: [a, b] [a, ...b]
@@ -59,7 +59,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + plugin?
 + template string
 + regex literal
-+ 0x 0o 0b
 + 123n
 + 2e2
 + object pattern as function parameter

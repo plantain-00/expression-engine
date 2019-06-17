@@ -2,7 +2,7 @@ import { parseExpression as babelParseExpression } from '@babel/parser'
 
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const expression = `a |> double |> (_ => add(7, _))`
+const expression = `0b101`
 let babelStartMoment = process.hrtime.bigint()
 const acronResult = babelParseExpression(expression, { ranges: true })
 const babelTime = process.hrtime.bigint() - babelStartMoment
