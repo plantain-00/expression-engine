@@ -2,7 +2,7 @@ import { parseExpression as babelParseExpression } from '@babel/parser'
 
 import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-const expression = `map([1, 2, undefined], (a = 1, ...b) => a * a + b[0])`
+const expression = `a |> double |> (_ => add(7, _))`
 let babelStartMoment = process.hrtime.bigint()
 const acronResult = babelParseExpression(expression, { ranges: true })
 const babelTime = process.hrtime.bigint() - babelStartMoment
@@ -18,6 +18,8 @@ console.info(Math.round(Number(thisTime) * 100 / Number(babelTime)) * 0.01, babe
 
 console.info(JSON.stringify(ast, null, 2))
 const result = evaluateExpression(ast, {
-  map: (array: number[], c: (a: number, index: number) => number) => array.map((a, i) => c(a, i))
+  a: 25,
+  double: (x: number) => x + x,
+  add: (x: number, y: number) => x + y
 })
 console.info(result)

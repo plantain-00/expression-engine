@@ -173,6 +173,10 @@ class Evaluator {
       return expression.operator === '&&' ? left && right : left || right
     }
 
+    if (expression.operator === '|>') {
+      return (right as (arg: unknown) => unknown)(left)
+    }
+
     if (typeof left !== 'number') {
       throw new Error(replaceLocaleParameters(this.locale.expect, 'Number', expression.left.range[0]))
     }

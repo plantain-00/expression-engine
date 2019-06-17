@@ -50,6 +50,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + binary expression: ^
 + binary expression: |
 + binary expression: || ?? or
++ pipeline operator: |>
 + condition expression: a ? b : c
 
 ## todo
@@ -61,6 +62,5 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 + 0x 0o 0b
 + 123n
 + 2e2
-+ |>
 + object pattern as function parameter
 + array pattern as function parameter

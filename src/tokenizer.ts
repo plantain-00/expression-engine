@@ -100,6 +100,9 @@ class Tokenizer {
     } else if (c === '.' && this.source[this.index + 1] === '.' && this.source[this.index + 1] === '.') {
       c += '..'
       this.index += 2
+    } else if (c === '|' && this.source[this.index + 1] === '>') {
+      c += '>'
+      this.index++
     }
     this.index++
     return {

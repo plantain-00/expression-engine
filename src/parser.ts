@@ -564,7 +564,8 @@ const priorizedBinaryOperators = [
   ['&'],
   ['^'],
   ['|'],
-  ['||', '??']
+  ['||', '??'],
+  ['|>']
 ]
 
 const prefixBinaryOperators = ['+', '-', '!', '~']
