@@ -189,6 +189,8 @@ class Tokenizer {
   private nextNumericToken(hasDecimalPoint: boolean): NumericLiteral {
     const startIndex = this.index
     let letterRange = (a: string) => a >= '0' && a <= '9'
+    let multiplier: number | undefined
+    let powerStartIndex = this.index
     for (let i = this.index + 1; i < this.source.length; i++) {
       const c = this.source[i]
       if (c === '.') {
@@ -209,8 +211,16 @@ class Tokenizer {
           letterRange = (a: string) => a >= '0' && a <= '7'
         }
         continue
+      } else if (multiplier === undefined && (c === 'e' || c === 'E')) {
+        multiplier = +this.source.substring(this.index, i)
+        powerStartIndex = i + 1
+        continue
+      } else if (multiplier !== undefined && c === '-') {
+        continue
       } else {
-        const value = +this.source.substring(this.index, i)
+        const value = multiplier === undefined
+          ? +this.source.substring(this.index, i)
+          : multiplier * 10 ** (+this.source.substring(powerStartIndex, i))
         this.index = i
         return {
           type: 'NumericLiteral',
