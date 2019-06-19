@@ -217,10 +217,12 @@ class Tokenizer {
         continue
       } else if (multiplier !== undefined && c === '-') {
         continue
+      } else if (c === '_') {
+        continue
       } else {
         const value = multiplier === undefined
-          ? +this.source.substring(this.index, i)
-          : multiplier * 10 ** (+this.source.substring(powerStartIndex, i))
+          ? this.getNumber(this.index, i)
+          : multiplier * 10 ** this.getNumber(powerStartIndex, i)
         this.index = i
         return {
           type: 'NumericLiteral',
@@ -229,13 +231,19 @@ class Tokenizer {
         }
       }
     }
-    const value = +this.source.substring(this.index)
+    const value = multiplier === undefined
+      ? this.getNumber(this.index)
+      : multiplier * 10 ** this.getNumber(powerStartIndex)
     this.index = this.source.length
     return {
       type: 'NumericLiteral',
       value,
       range: [startIndex, this.index]
     }
+  }
+
+  private getNumber(startIndex: number, endIndex?: number) {
+    return +Array.from(this.source.substring(startIndex, endIndex)).filter((a) => a !== '_').join('')
   }
 
   private nextStringToken(c: string): StringLiteral {

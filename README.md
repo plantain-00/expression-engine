@@ -28,7 +28,7 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 
 ## supported expression features(ordered by priority from high to low)
 
-+ numeric literal: 123 0x123 0o123 0b101 2e2
++ numeric literal: 123 0x123 0o123 0b101 2e2 123_456
 + string literal: 'abc' "abc"
 + boolean literal: true false
 + array literal: [a, b] [a, ...b]
@@ -55,7 +55,6 @@ const result = evaluateExpression(ast, { a: 1, b: 2 })
 
 ## todo
 
-+ 123_456
 + template string
 + regex literal
 + 123n
