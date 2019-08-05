@@ -28,7 +28,6 @@ class Tokenizer {
     return tokens
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   private nextToken(): Token {
     if (this.index >= this.source.length) {
       this.previousToken = {
@@ -61,7 +60,6 @@ class Tokenizer {
     return this.previousToken
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   private nextPunctuator(c: string): PunctuatorToken {
     const startIndex = this.index
     if (c === '>' || c === '<' || c === '=' || c === '!') {
@@ -185,7 +183,6 @@ class Tokenizer {
     return undefined
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   private nextNumericToken(hasDecimalPoint: boolean): NumericLiteral {
     const startIndex = this.index
     let letterRange = (a: string) => a >= '0' && a <= '9'

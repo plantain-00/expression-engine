@@ -35,8 +35,7 @@ class Parser {
   }
   private locale: Locale
 
-  // tslint:disable-next-line:cognitive-complexity
-  parseExpression(tokens: Array<Token | Expression>, range: [number, number]): Expression {
+  parseExpression(tokens: (Token | Expression)[], range: [number, number]): Expression {
     if (tokens.length === 0) {
       throw new Error(this.locale.emptyExpression)
     }
@@ -112,12 +111,12 @@ class Parser {
     throw new Error(replaceLocaleParameters(this.locale.unexpectToken, range[0], range[1]))
   }
 
-  private parseObjectLiteral(tokens: Array<Token | Expression>, range: [number, number]): ObjectExpression {
+  private parseObjectLiteral(tokens: (Token | Expression)[], range: [number, number]): ObjectExpression {
     const propertyExpressions: (Property | SpreadElement)[] = []
-    let keyTokens: Array<Token | Expression> = []
-    let valueTokens: Array<Token | Expression> = []
+    let keyTokens: (Token | Expression)[] = []
+    let valueTokens: (Token | Expression)[] = []
     let keyPart = true
-    const saveTokens = (...token: Array<Token | Expression>) => {
+    const saveTokens = (...token: (Token | Expression)[]) => {
       if (keyPart) {
         keyTokens.push(...token)
       } else {
@@ -155,7 +154,7 @@ class Parser {
     }
   }
 
-  private parseProperty(keyTokens: Array<Token | Expression>, valueTokens: Array<Token | Expression>): Property | SpreadElement {
+  private parseProperty(keyTokens: (Token | Expression)[], valueTokens: (Token | Expression)[]): Property | SpreadElement {
     if (keyTokens.length === 2 && valueTokens.length === 0) {
       const [operator, token] = keyTokens
       if (operator.type === 'PunctuatorToken' && operator.value === '...' && !isToken(token)) {
@@ -202,8 +201,8 @@ class Parser {
     return expression
   }
 
-  private parseGroup(tokens: Array<Token | Expression>) {
-    const newTokens: Array<Token | Expression> = []
+  private parseGroup(tokens: (Token | Expression)[]) {
+    const newTokens: (Token | Expression)[] = []
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && token.value === '(') {
@@ -227,7 +226,6 @@ class Parser {
     return newTokens
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   private parseFunctionParameters(tokens: (Token | Expression)[], range: [number, number]) {
     const expression: FunctionParamsExpression = {
       type: 'FunctionParamsExpression',
@@ -284,8 +282,8 @@ class Parser {
     return expression
   }
 
-  private parseArrayLiteral(tokens: Array<Token | Expression>) {
-    const newTokens: Array<Token | Expression> = []
+  private parseArrayLiteral(tokens: (Token | Expression)[]) {
+    const newTokens: (Token | Expression)[] = []
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && token.value === '[') {
@@ -341,8 +339,8 @@ class Parser {
     throw new Error(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]))
   }
 
-  private parseMemberOrCallExpression(tokens: Array<Token | Expression>) {
-    const newTokens: Array<Token | Expression> = []
+  private parseMemberOrCallExpression(tokens: (Token | Expression)[]) {
+    const newTokens: (Token | Expression)[] = []
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken') {
@@ -384,11 +382,11 @@ class Parser {
   }
 
   private parsePreviousExpression(
-    tokens: Array<Token | Expression>,
+    tokens: (Token | Expression)[],
     operators: string[],
     range: [number, number]
   ): Expression {
-    const newTokens: Array<Token | Expression> = []
+    const newTokens: (Token | Expression)[] = []
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken' && operators.includes(token.value)) {
@@ -414,7 +412,7 @@ class Parser {
     return this.parseExpression(newTokens, range)
   }
 
-  private parseUnaryExpression(tokens: Array<Token | Expression>, range: [number, number]): UnaryExpression | ArrayExpression | ObjectExpression {
+  private parseUnaryExpression(tokens: (Token | Expression)[], range: [number, number]): UnaryExpression | ArrayExpression | ObjectExpression {
     const [operator, token] = tokens
     if (operator.type === 'PunctuatorToken' && token.type === 'PunctuatorToken') {
       if (operator.value === '[' && token.value === ']') {
@@ -450,7 +448,7 @@ class Parser {
     throw new Error(replaceLocaleParameters(this.locale.expectUnaryOperator, range[0]))
   }
 
-  private hasPreviousExpression(tokens: Array<Token | Expression>, i: number) {
+  private hasPreviousExpression(tokens: (Token | Expression)[], i: number) {
     if (i === 0) {
       return false
     }
@@ -458,9 +456,9 @@ class Parser {
     return token.type !== 'PunctuatorToken' || (token.value === ')' || token.value === ']')
   }
 
-  private parseItems(tokens: Array<Token | Expression>, startMarkIndex: number, endMarkIndex: number) {
+  private parseItems(tokens: (Token | Expression)[], startMarkIndex: number, endMarkIndex: number) {
     const itemExpressions: (Expression | SpreadElement)[] = []
-    let itemTokens: Array<Token | Expression> = []
+    let itemTokens: (Token | Expression)[] = []
     for (let j = startMarkIndex + 1; j < endMarkIndex; j++) {
       const item = tokens[j]
       if (item.type === 'PunctuatorToken') {
@@ -484,7 +482,7 @@ class Parser {
     return itemExpressions
   }
 
-  private parseMayBeSpreadExpression(itemTokens: Array<Token | Expression>, range: [number, number]): Expression | SpreadElement {
+  private parseMayBeSpreadExpression(itemTokens: (Token | Expression)[], range: [number, number]): Expression | SpreadElement {
     if (itemTokens.length === 2) {
       const [operator, token] = itemTokens
       if (operator.type === 'PunctuatorToken' && operator.value === '...' && !isToken(token)) {
@@ -498,7 +496,7 @@ class Parser {
     return this.parseExpression(itemTokens, range)
   }
 
-  private parseConditionalExpression(tokens: Array<Token | Expression>, range: [number, number]): Expression {
+  private parseConditionalExpression(tokens: (Token | Expression)[], range: [number, number]): Expression {
     const [test, operator1, consequent, operator2, alternate] = tokens
     if (operator1.type === 'PunctuatorToken' && operator1.value === '?' && operator2.type === 'PunctuatorToken' && operator2.value === ':') {
       test.range[1] = operator1.range[0] - 1
@@ -517,7 +515,7 @@ class Parser {
     return isToken(token) ? this.parseExpression([token], token.range) : token
   }
 
-  private findGroupEnd(tokens: Array<Token | Expression>, start: number, startMark: string) {
+  private findGroupEnd(tokens: (Token | Expression)[], start: number, startMark: string) {
     const endMark = groupEnds[startMark]
     let count = 1
     for (let i = start + 1; i < tokens.length; i++) {

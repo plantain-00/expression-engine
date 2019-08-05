@@ -13,7 +13,6 @@ class Evaluator {
   }
   private locale: Locale
 
-  // tslint:disable-next-line:cognitive-complexity
   evalutate(expression: Expression, context: { [name: string]: unknown }, isFirstIdentifier: boolean): unknown {
     if (expression.type === 'BinaryExpression') {
       return this.evaluateBinaryExpression(expression, context)
@@ -121,7 +120,6 @@ class Evaluator {
     throw new Error(this.locale.unexpectToken)
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   private evaluateBinaryExpression(expression: BinaryExpression, context: { [name: string]: unknown }): unknown {
     const left = this.evalutate(expression.left, context, true)
     const right = this.evalutate(expression.right, context, true)
