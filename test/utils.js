@@ -1,5 +1,5 @@
 const { parseExpression: babelParseExpression } = require('@babel/parser')
-const { parseExpression, tokenizeExpression } = require('../dist/nodejs')
+const { parseExpression, tokenizeExpression, printExpression } = require('../dist/nodejs')
 
 /**
  * @param {string} expression
@@ -23,7 +23,9 @@ function parseWithAcornToo (expression, t) {
 
   t.deepEqual(ast, babelAst)
 
-  return { tokens, ast }
+  const printResult = printExpression(ast)
+
+  return { tokens, ast, printResult }
 }
 
 const properties = [

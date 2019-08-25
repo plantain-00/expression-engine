@@ -6,9 +6,9 @@ import { parseWithAcornToo } from './utils'
 const title = 'unary expression byte not'
 
 test(title, (t) => {
-  const { tokens, ast } = parseWithAcornToo(`~a`, t)
+  const { tokens, ast, printResult } = parseWithAcornToo(`~a`, t)
   const result = evaluateExpression(ast, {
     a: 123
   })
-  t.snapshot({ tokens, ast, result }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

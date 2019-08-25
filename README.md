@@ -18,11 +18,13 @@ An expression tokenizer, parser and evaluator.
 ## usage
 
 ```ts
-import { tokenizeExpression, parseExpression, evaluateExpression } from "expression-engine";
+import { tokenizeExpression, parseExpression, evaluateExpression, printExpression } from "expression-engine";
 
 const tokens = tokenizeExpression('a + b')
 const ast = parseExpression(tokens)
 const result = evaluateExpression(ast, { a: 1, b: 2 })
+const expression = printExpression(ast)
+
 // <script src="./node_modules/expression-engine/expression-engine.min.js"></script>
 ```
 

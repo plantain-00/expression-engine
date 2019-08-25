@@ -8,8 +8,8 @@ for (const expression of expressions) {
   const title = `number literal: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast } = parseWithAcornToo(expression, t)
+    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
     const result = evaluateExpression(ast, {})
-    t.snapshot({ tokens, ast, result }, { id: title })
+    t.snapshot({ tokens, ast, result, printResult }, { id: title })
   })
 }

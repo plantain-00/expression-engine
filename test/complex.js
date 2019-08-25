@@ -10,7 +10,7 @@ for (const expression of expressions) {
   const title = `complex: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast } = parseWithAcornToo(expression, t)
-    t.snapshot({ tokens, ast }, { id: title })
+    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
+    t.snapshot({ tokens, ast, printResult }, { id: title })
   })
 }

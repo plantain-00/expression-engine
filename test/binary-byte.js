@@ -8,11 +8,11 @@ for (const expression of expressions) {
   const title = `binary byte: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast } = parseWithAcornToo(expression, t)
+    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
     const result = evaluateExpression(ast, {
       a: 100,
       b: 1
     })
-    t.snapshot({ tokens, ast, result }, { id: title })
+    t.snapshot({ tokens, ast, result, printResult }, { id: title })
   })
 }

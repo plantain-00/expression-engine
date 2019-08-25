@@ -6,7 +6,7 @@ import { parseWithAcornToo } from './utils'
 const title = `array literal empty`
 
 test(title, (t) => {
-  const { tokens, ast } = parseWithAcornToo(`[]`, t)
+  const { tokens, ast, printResult } = parseWithAcornToo(`[]`, t)
   const result = evaluateExpression(ast, {})
-  t.snapshot({ tokens, ast, result }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

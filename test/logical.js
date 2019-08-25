@@ -6,9 +6,9 @@ import { parseWithAcornToo } from './utils'
 const title = 'logical expression'
 
 test(title, (t) => {
-  const { tokens, ast } = parseWithAcornToo(`a > 1 && a < 3 ? 4 : 5`, t)
+  const { tokens, ast, printResult } = parseWithAcornToo(`a > 1 && a < 3 ? 4 : 5`, t)
   const result = evaluateExpression(ast, {
     a: 2
   })
-  t.snapshot({ tokens, ast, result }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

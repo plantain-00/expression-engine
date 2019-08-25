@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
 
 const title = 'binary pipeline operator'
 
@@ -12,5 +12,6 @@ test(title, (t) => {
     double: x => x + x,
     add: (x, y) => x + y
   })
-  t.snapshot({ tokens, ast, result }, { id: title })
+  const printResult = printExpression(ast)
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

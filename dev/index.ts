@@ -1,6 +1,6 @@
 import { parseExpression as babelParseExpression } from '@babel/parser'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../src'
+import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../src'
 
 const expression = `123_456`
 let babelStartMoment = process.hrtime.bigint()
@@ -23,3 +23,5 @@ const result = evaluateExpression(ast, {
   add: (x: number, y: number) => x + y
 })
 console.info(result)
+
+console.info(printExpression(ast))

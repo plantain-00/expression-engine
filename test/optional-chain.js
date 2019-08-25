@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
 
 const title = 'optional chain'
 
@@ -8,5 +8,6 @@ test(title, (t) => {
   const tokens = tokenizeExpression(`a?.b`)
   const ast = parseExpression(tokens)
   const result = evaluateExpression(ast, {})
-  t.snapshot({ tokens, ast, result }, { id: title })
+  const printResult = printExpression(ast)
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

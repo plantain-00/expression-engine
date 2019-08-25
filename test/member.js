@@ -6,7 +6,7 @@ import { parseWithAcornToo } from './utils'
 const title = 'member expression'
 
 test(title, (t) => {
-  const { tokens, ast } = parseWithAcornToo(`a.b.c + 1`, t)
+  const { tokens, ast, printResult } = parseWithAcornToo(`a.b.c + 1`, t)
   const result = evaluateExpression(ast, {
     a: {
       b: {
@@ -14,5 +14,5 @@ test(title, (t) => {
       }
     }
   })
-  t.snapshot({ tokens, ast, result }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

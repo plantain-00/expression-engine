@@ -6,7 +6,7 @@ import { parseWithAcornToo } from './utils'
 const title = 'boolean literal'
 
 test(title, (t) => {
-  const { tokens, ast } = parseWithAcornToo(`true ? false : true`, t)
+  const { tokens, ast, printResult } = parseWithAcornToo(`true ? false : true`, t)
   const result = evaluateExpression(ast, {})
-  t.snapshot({ tokens, ast, result }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

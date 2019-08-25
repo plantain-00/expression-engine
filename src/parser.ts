@@ -567,7 +567,7 @@ const priorizedBinaryOperators = [
 ]
 
 const prefixBinaryOperators = ['+', '-', '!', '~']
-const postfixBinaryOpeators = ['%']
+export const postfixBinaryOpeators = ['%']
 
 const callOperators = ['.', '?.']
 

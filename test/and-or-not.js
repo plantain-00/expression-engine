@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression } from '../dist/nodejs'
+import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
 
 const title = 'and or not'
 
@@ -10,5 +10,6 @@ test(title, (t) => {
   const result = evaluateExpression(ast, {
     a: 1
   })
-  t.snapshot({ tokens, ast, result }, { id: title })
+  const printResult = printExpression(ast)
+  t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })
