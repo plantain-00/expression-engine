@@ -19,7 +19,8 @@ import {
   ArrayExpression,
   ArrowFunctionExpression,
   FunctionParamsExpression,
-  Pattern
+  Pattern,
+  CallExpression
 } from '.'
 
 /**
@@ -341,9 +342,17 @@ class Parser {
 
   private parseMemberOrCallExpression(tokens: (Token | Expression)[]) {
     const newTokens: (Token | Expression)[] = []
+    let expectCall = false
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
       if (token.type === 'PunctuatorToken') {
+        if (!expectCall && token.value === '?.') {
+          expectCall = true
+          continue
+        }
+        if (expectCall && token.value !== '[' && token.value !== '(') {
+          throw new Error(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]))
+        }
         if (callOperators.includes(token.value)) {
           const object = newTokens.pop()!
           newTokens.push(this.parseExpression([object, token, tokens[i + 1]], getHeadTailRange(object, tokens[i + 1])))
@@ -353,23 +362,31 @@ class Parser {
           const object = newTokens.pop()!
           const groupedTokens = tokens.filter((_, j) => j > i && j < index)
           const property = this.parseExpression(groupedTokens, getTokensRange(groupedTokens))
-          newTokens.push({
+          const memberExpression: MemberExpression = {
             type: 'MemberExpression',
             object: this.parseTokenOrExpression(object),
             property: this.parseTokenOrExpression(property),
             range: [object.range[0], tokens[index].range[1]]
-          })
+          }
+          if (expectCall) {
+            memberExpression.optional = true
+          }
+          newTokens.push(memberExpression)
           i = index
         } else if (token.value === '(') {
           const index = this.findGroupEnd(tokens, i, token.value)
           const argumentsExpressions = this.parseItems(tokens, i, index)
           const lastToken = newTokens.pop()!
-          newTokens.push({
+          const callExpression: CallExpression = {
             type: 'CallExpression',
             callee: this.parseExpression([lastToken], lastToken.range),
             arguments: argumentsExpressions,
             range: [lastToken.range[0], tokens[index].range[1]]
-          })
+          }
+          if (expectCall) {
+            callExpression.optional = true
+          }
+          newTokens.push(callExpression)
           i = index
         } else {
           newTokens.push(token)
@@ -453,7 +470,14 @@ class Parser {
       return false
     }
     const token = tokens[i - 1]
-    return token.type !== 'PunctuatorToken' || (token.value === ')' || token.value === ']')
+    if (token.type !== 'PunctuatorToken' || token.value === ')' || token.value === ']') {
+      return true
+    }
+    if (token.value === '?.' && i > 1) {
+      const previousToken = tokens[i - 2]
+      return previousToken.type !== 'PunctuatorToken' || previousToken.value === ')' || previousToken.value === ']'
+    }
+    return 
   }
 
   private parseItems(tokens: (Token | Expression)[], startMarkIndex: number, endMarkIndex: number) {

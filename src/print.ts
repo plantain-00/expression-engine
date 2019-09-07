@@ -57,11 +57,20 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
     const object = print(expression.object)
     const property = print(expression.property)
     if (expression.property.type === 'Identifier') {
+      if (expression.optional) {
+        return object + '?.' + property
+      }
       return object + '.' + property
+    }
+    if (expression.optional) {
+      return object + '?.[' + property + ']'
     }
     return object + '[' + property + ']'
   }
   if (expression.type === 'CallExpression') {
+    if (expression.optional) {
+      return print(expression.callee) + '?.(' + expression.arguments.map((a) => print(a)).join(', ') + ')'
+    }
     return print(expression.callee) + '(' + expression.arguments.map((a) => print(a)).join(', ') + ')'
   }
   if (expression.type === 'ConditionalExpression') {

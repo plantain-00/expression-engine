@@ -125,6 +125,7 @@ export interface CallExpression extends Node {
   type: 'CallExpression'
   callee: Expression
   arguments: (Expression | SpreadElement)[]
+  optional?: boolean
 }
 
 /**
