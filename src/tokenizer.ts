@@ -44,7 +44,8 @@ class Tokenizer {
       } else if ((c === '.')) {
         if (this.source[this.index + 1] === '.' && this.source[this.index + 2] === '.') {
           this.previousToken = this.nextPunctuator(c)
-        } else if ((this.previousToken.type === 'EOFToken' || this.previousToken.type === 'PunctuatorToken')) {
+        } else if (this.previousToken.type === 'EOFToken'
+          || (this.previousToken.type === 'PunctuatorToken' && numberPunctuators.includes(this.previousToken.value))) {
           this.previousToken = this.nextNumericToken(true)
         } else {
           this.previousToken = this.nextPunctuator(c)
@@ -269,14 +270,18 @@ class Tokenizer {
   }
 }
 
-const punctuators = [
-  '(', ')',
-  '[', ']',
-  '{', '}',
+const numberPunctuators = [
   '*', '/', '%',
   '+', '-',
   '>', '<', '=', '!',
   '&', '^', '|',
+]
+
+const punctuators = [
+  '(', ')',
+  '[', ']',
+  '{', '}',
+  ...numberPunctuators,
   '?', ':',
   ',', '~'
 ]
