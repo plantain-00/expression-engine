@@ -141,7 +141,7 @@ class Parser {
       if (token.type === 'PunctuatorToken') {
         if (groupStarts.includes(token.value)) {
           const groupEnd = this.findGroupEnd(tokens, j, token.value)
-          saveTokens(...tokens.filter((_, i) => i >= j && i <= groupEnd))
+          saveTokens(...tokens.slice(j, groupEnd + 1))
           j = groupEnd
         } else if (token.value === ',') {
           propertyExpressions.push(this.parseProperty(keyTokens, valueTokens))
@@ -225,7 +225,7 @@ class Parser {
           newTokens.push(token)
           continue
         }
-        const newToken = tokens.filter((_, j) => j > i && j < index)
+        const newToken = tokens.slice(i + 1, index)
         i = index
         if (getFunctionArrowIndex(index, tokens) !== -1) {
           newTokens.push(this.parseFunctionParameters(newToken, [token.range[0], tokens[index].range[1]]))
@@ -372,7 +372,7 @@ class Parser {
         } else if (token.value === '[') {
           const index = this.findGroupEnd(tokens, i, token.value)
           const object = newTokens.pop()!
-          const groupedTokens = tokens.filter((_, j) => j > i && j < index)
+          const groupedTokens = tokens.slice(i + 1, index)
           const property = this.parseExpression(groupedTokens, getTokensRange(groupedTokens))
           const memberExpression: MemberExpression = {
             type: 'MemberExpression',
@@ -500,7 +500,7 @@ class Parser {
       if (item.type === 'PunctuatorToken') {
         if (groupStarts.includes(item.value)) {
           const groupEnd = this.findGroupEnd(tokens, j, item.value)
-          itemTokens.push(...tokens.filter((_, i) => i >= j && i <= groupEnd))
+          itemTokens.push(...tokens.slice(j, groupEnd + 1))
           j = groupEnd
         } else if (item.value === ',') {
           itemExpressions.push(this.parseMayBeSpreadExpression(itemTokens, getTokensRange(itemTokens)))
