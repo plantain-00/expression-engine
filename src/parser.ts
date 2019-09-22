@@ -109,6 +109,18 @@ class Parser {
       return this.parseConditionalExpression(tokens, range)
     }
 
+    const functionArrowIndex = getFunctionArrowIndex(0, tokens)
+    if (functionArrowIndex >= 0) {
+      const functionParamsExpression = this.parseFunctionParameters(tokens.slice(0, functionArrowIndex), [tokens[0].range[0], tokens[functionArrowIndex - 1].range[1]])
+      const bodyExpression = this.parseExpression(tokens.slice(functionArrowIndex + 1), [tokens[functionArrowIndex + 1].range[0], tokens[tokens.length - 1].range[1]])
+      return {
+        type: 'ArrowFunctionExpression',
+        params: functionParamsExpression.params,
+        body: bodyExpression,
+        range
+      } as ArrowFunctionExpression
+    }
+
     throw new Error(replaceLocaleParameters(this.locale.unexpectToken, range[0], range[1]))
   }
 
@@ -215,7 +227,7 @@ class Parser {
         }
         const newToken = tokens.filter((_, j) => j > i && j < index)
         i = index
-        if (isFunctionParameters(index, tokens)) {
+        if (getFunctionArrowIndex(index, tokens) !== -1) {
           newTokens.push(this.parseFunctionParameters(newToken, [token.range[0], tokens[index].range[1]]))
           continue
         }
@@ -567,12 +579,14 @@ function getHeadTailRange(head: Token | Expression, tail: Token | Expression): [
   return [head.range[0], tail.range[1]]
 }
 
-function isFunctionParameters(index: number, tokens: (Token | Expression)[]) {
+function getFunctionArrowIndex(index: number, tokens: (Token | Expression)[]) {
   if (index < tokens.length - 1) {
     const nextToken = tokens[index + 1]
-    return nextToken.type === 'PunctuatorToken' && nextToken.value === '=>'
+    if (nextToken.type === 'PunctuatorToken' && nextToken.value === '=>') {
+      return index + 1
   }
-  return false
+  }
+  return -1
 }
 
 const priorizedBinaryOperators = [
