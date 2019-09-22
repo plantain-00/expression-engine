@@ -20,10 +20,11 @@ class Evaluator {
     if (expression.type === 'MemberExpression') {
       const object = this.evalutate(expression.object, context, isFirstIdentifier) as { [property: string]: unknown }
       const property = this.evalutate(expression.property, context, false) as string
-      if (expression.optional) {
-        return object ? object[property] : undefined
+      if (expression.optional && !object) {
+        return undefined
       }
-      return object[property]
+      const value = object[property]
+      return typeof value === 'function' ? value.bind(object) : value
     }
     if (expression.type === 'ConditionalExpression') {
       const test = this.evalutate(expression.test, context, true)

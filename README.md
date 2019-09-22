@@ -62,4 +62,3 @@ const expression = printExpression(ast)
 + 123n
 + object pattern as function parameter
 + array pattern as function parameter
-+ Array.map
