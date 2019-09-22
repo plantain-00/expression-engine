@@ -1,6 +1,6 @@
 {
   "name": "expression-engine",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "An expression tokenizer, parser and evaluator.",
   "main": "nodejs/index.js",
   "scripts": {
