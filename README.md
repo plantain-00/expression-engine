@@ -55,6 +55,70 @@ const expression = printExpression(ast)
 + pipeline operator: |>
 + condition expression: a ? b : c
 
+## custom data
+
+```ts
+import { tokenizeExpression, parseExpression, evaluateExpression, CustomData } from 'expression-engine'
+
+class HighlightText implements CustomData {
+  constructor(public text: string, public highlight: number[]) { }
+
+  add(right: string | HighlightText) {
+    if (typeof right === 'string') {
+      return new HighlightText(this.text + right, this.highlight)
+    }
+    const highlight = [...this.highlight]
+    if (right.highlight.length > 0) {
+      const [first, ...remain] = right.highlight
+      highlight.push(first + this.text.length - highlight.reduce((p, c) => p + c, 0), ...remain)
+    }
+    return new HighlightText(this.text + right.text, highlight)
+  }
+
+  added(left: string) {
+    if (this.highlight.length > 0) {
+      const [first, ...remain] = this.highlight
+      return new HighlightText(left + this.text, [first + left.length, ...remain])
+    }
+    return new HighlightText(left + this.text, this.highlight)
+  }
+
+  equal(value: string | HighlightText) {
+    const text = typeof value === 'string' ? value : value.text
+    const highlight = typeof value === 'string' ? [] : value.highlight || []
+    if (text !== this.text) {
+      return false
+    }
+    if (this.highlight.length !== highlight.length) {
+      return false
+    }
+    for (let i = 0; i < highlight.length; i++) {
+      if (highlight[i] !== this.highlight[i]) {
+        return false
+      }
+    }
+    return true
+  }
+}
+
+function isCustomData(value: unknown): value is CustomData {
+  return value instanceof HighlightText
+}
+
+const tokens = tokenizeExpression('a + b')
+const ast = parseExpression(tokens)
+const result = evaluateExpression(
+  ast,
+  {
+    a: new HighlightText('aaa', [1, 1]),
+    b: new HighlightText('bbb', [1, 1])
+  },
+  undefined,
+  isCustomData
+)
+// HighlightText { text: 'aaabbb', highlight: [ 1, 1, 2, 1 ] }
+```
+
 ## todo
 
 + template string

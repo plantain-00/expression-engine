@@ -3,12 +3,17 @@ import { Expression, UnaryExpression, LogicalExpression, BinaryExpression, Local
 /**
  * @public
  */
-export function evaluateExpression(expression: Expression, context: { [name: string]: unknown }, locale?: Locale) {
-  return new Evaluator(locale).evalutate(expression, context, true)
+export function evaluateExpression(
+  expression: Expression,
+  context: { [name: string]: unknown },
+  locale?: Locale,
+  isCustomData?: (value: unknown) => value is CustomData
+) {
+  return new Evaluator(locale, isCustomData).evalutate(expression, context, true)
 }
 
 class Evaluator {
-  constructor(locale?: Locale) {
+  constructor(locale?: Locale, private isCustomData?: (value: unknown) => value is CustomData) {
     this.locale = getLocale(locale)
   }
   private locale: Locale
@@ -124,6 +129,86 @@ class Evaluator {
   private evaluateBinaryExpression(expression: BinaryExpression, context: { [name: string]: unknown }): unknown {
     const left = this.evalutate(expression.left, context, true)
     const right = this.evalutate(expression.right, context, true)
+
+    if (this.isCustomData) {
+      if (this.isCustomData(left)) {
+        if (expression.operator === '+' && left.add) {
+          return left.add(right)
+        }
+        if (expression.operator === '-' && left.subtract) {
+          return left.subtract(right)
+        }
+        if (expression.operator === '*' && left.multiply) {
+          return left.multiply(right)
+        }
+        if (expression.operator === '/' && left.divide) {
+          return left.divide(right)
+        }
+        if (expression.operator === '%' && left.remainer) {
+          return left.remainer(right)
+        }
+        if (expression.operator === '**' && left.power) {
+          return left.power(right)
+        }
+        if ((expression.operator === '==' || expression.operator === '===') && left.equal) {
+          return left.equal(right)
+        }
+        if ((expression.operator === '!=' || expression.operator === '!==') && left.equal) {
+          return !left.equal(right)
+        }
+        if (expression.operator === '<' && left.lessThan) {
+          return left.lessThan(right)
+        }
+        if (expression.operator === '>' && left.greaterThan) {
+          return left.greaterThan(right)
+        }
+        if (expression.operator === '<=' && left.lessThanOrEqual) {
+          return left.lessThanOrEqual(right)
+        }
+        if (expression.operator === '>' && left.greaterThanOrEqual) {
+          return left.greaterThanOrEqual(right)
+        }
+      }
+      if (this.isCustomData(right)) {
+        if (expression.operator === '+' && right.added) {
+          return right.added(left)
+        }
+        if (expression.operator === '-' && right.subtracted) {
+          return right.subtracted(left)
+        }
+        if (expression.operator === '*' && right.multiplied) {
+          return right.multiplied(left)
+        }
+        if (expression.operator === '/' && right.divided) {
+          return right.divided(left)
+        }
+        if (expression.operator === '%' && right.remainered) {
+          return right.remainered(left)
+        }
+        if (expression.operator === '**' && right.powered) {
+          return right.powered(left)
+        }
+        if ((expression.operator === '==' || expression.operator === '===') && right.equal) {
+          return right.equal(left)
+        }
+        if ((expression.operator === '!=' || expression.operator === '!==') && right.equal) {
+          return !right.equal(left)
+        }
+        if (expression.operator === '<' && right.greaterThanOrEqual) {
+          return right.greaterThanOrEqual(left)
+        }
+        if (expression.operator === '>' && right.lessThanOrEqual) {
+          return right.lessThanOrEqual(left)
+        }
+        if (expression.operator === '<=' && right.greaterThan) {
+          return right.greaterThan(left)
+        }
+        if (expression.operator === '>=' && right.lessThan) {
+          return right.lessThan(left)
+        }
+      }
+    }
+
     if (expression.operator === '+') {
       if (typeof left === 'string') {
         if (typeof right !== 'string') {
@@ -284,4 +369,35 @@ class Evaluator {
     }
     throw new Error(this.locale.unexpectToken)
   }
+}
+
+/**
+ * @public
+ */
+export interface CustomData {
+  add?(right: unknown): unknown
+  added?(left: unknown): unknown
+
+  subtract?(right: unknown): unknown
+  subtracted?(left: unknown): unknown
+
+  multiply?(right: unknown): unknown
+  multiplied?(left: unknown): unknown
+
+  divide?(right: unknown): unknown
+  divided?(left: unknown): unknown
+
+  remainer?(right: unknown): unknown
+  remainered?(left: unknown): unknown
+
+  equal?(value: unknown): unknown
+
+  lessThan?(value: unknown): unknown
+  greaterThan?(value: unknown): unknown
+
+  lessThanOrEqual?(value: unknown): unknown
+  greaterThanOrEqual?(value: unknown): unknown
+
+  power?(value: unknown): unknown
+  powered?(value: unknown): unknown
 }
