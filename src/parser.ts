@@ -404,7 +404,19 @@ class Parser {
           newTokens.push(token)
         }
       } else {
-        newTokens.push(token)
+        if (expectCall) {
+          const object = newTokens.pop()!
+          newTokens.push({
+            type: 'MemberExpression',
+            object: this.parseTokenOrExpression(object),
+            property: this.parseTokenOrExpression(token),
+            range: [object.range[0], tokens[i].range[1]],
+            optional: true,
+          })
+          expectCall = false
+        } else {
+          newTokens.push(token)
+        }
       }
     }
     return this.parseExpression(newTokens, getTokensRange(newTokens))
