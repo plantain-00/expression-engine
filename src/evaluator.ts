@@ -211,13 +211,13 @@ class Evaluator {
 
     if (expression.operator === '+') {
       if (typeof left === 'string') {
-        if (typeof right !== 'string') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'String', expression.right.range[0]))
-        }
         return left + right
       }
       if (typeof left !== 'number' || isNaN(left)) {
         throw new Error(replaceLocaleParameters(this.locale.expect, 'Number', expression.left.range[0]))
+      }
+      if (typeof right === 'string') {
+        return left + right
       }
       if (typeof right !== 'number' || isNaN(right)) {
         throw new Error(replaceLocaleParameters(this.locale.expect, 'Number', expression.right.range[0]))
@@ -225,36 +225,7 @@ class Evaluator {
       return left + right
     }
     if (expression.operator === '==' || expression.operator === '===' || expression.operator === '!=' || expression.operator === '!==') {
-      if (typeof left === 'string') {
-        if (typeof right !== 'string') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'String', expression.right.range[0]))
-        }
-      } else if (typeof left === 'boolean') {
-        if (typeof right !== 'boolean') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'String', expression.right.range[0]))
-        }
-      } else {
-        if (typeof left !== 'number') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'String', expression.left.range[0]))
-        }
-        if (typeof right !== 'number') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'String', expression.right.range[0]))
-        }
-      }
       return expression.operator === '==' || expression.operator === '===' ? left === right : left !== right
-    }
-
-    if (expression.operator === '&&' || expression.operator === '||' || expression.operator === '??') {
-      if (expression.operator === '??') {
-        return left !== null && left !== undefined ? left : right
-      }
-      if (typeof left !== 'boolean') {
-        throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.left.range[0]))
-      }
-      if (typeof right !== 'boolean') {
-        throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.right.range[0]))
-      }
-      return expression.operator === '&&' ? left && right : left || right
     }
 
     if (expression.operator === '|>') {
@@ -318,28 +289,14 @@ class Evaluator {
 
   private evaluateLogicalExpression(expression: LogicalExpression, context: { [name: string]: unknown }): unknown {
     const left = this.evalutate(expression.left, context, true)
-    if (typeof left !== 'boolean') {
-      throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.left.range[0]))
-    }
     if (expression.operator === '&&') {
-      if (left) {
-        const right = this.evalutate(expression.right, context, true)
-        if (typeof right !== 'boolean') {
-          throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.right.range[0]))
-        }
-        return right
-      }
-      return false
+      return left && this.evalutate(expression.right, context, true)
     }
     if (expression.operator === '||') {
-      if (left) {
-        return true
-      }
-      const right = this.evalutate(expression.right, context, true)
-      if (typeof right !== 'boolean') {
-        throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.right.range[0]))
-      }
-      return right
+      return left || this.evalutate(expression.right, context, true)
+    }
+    if (expression.operator === '??') {
+      return left !== null && left !== undefined ? left : this.evalutate(expression.right, context, true)
     }
     throw new Error(this.locale.unexpectToken)
   }
@@ -347,19 +304,16 @@ class Evaluator {
   private evaluateUnaryExpression(expression: UnaryExpression, context: { [name: string]: unknown }): unknown {
     const value = this.evalutate(expression.argument, context, true)
     if (expression.operator === '!') {
-      if (typeof value !== 'boolean') {
-        throw new Error(replaceLocaleParameters(this.locale.expect, 'Boolean', expression.argument.range[0]))
-      }
       return !value
+    }
+    if (expression.operator === '+' && (typeof value === 'number' || typeof value === 'string')) {
+      return +value
     }
     if (typeof value !== 'number' || isNaN(value)) {
       throw new Error(replaceLocaleParameters(this.locale.expect, 'Number', expression.argument.range[0]))
     }
     if (expression.operator === '-') {
       return -value
-    }
-    if (expression.operator === '+') {
-      return value
     }
     if (expression.operator === '~') {
       return ~value

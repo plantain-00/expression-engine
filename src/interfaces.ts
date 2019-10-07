@@ -116,7 +116,7 @@ export interface LogicalExpression extends Node {
 /**
  * @public
  */
-export type LogicalOperator = '||' | '&&'
+export type LogicalOperator = '||' | '&&' | '??'
 
 /**
  * @public

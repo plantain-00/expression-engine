@@ -321,7 +321,7 @@ class Parser {
   }
 
   private parseBinaryExpression(left: Token | Expression, operator: PunctuatorToken, right: Token | Expression, range: [number, number]): LogicalExpression | BinaryExpression {
-    if (operator.value === '&&' || operator.value === '||') {
+    if (operator.value === '&&' || operator.value === '||' || operator.value === '??') {
       return {
         type: 'LogicalExpression',
         left: this.parseTokenOrExpression(left),
