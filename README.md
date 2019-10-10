@@ -40,7 +40,7 @@ const expression = printExpression(ast)
 + group: ( )
 + member expression and call expression: a.b a[0] a['b'] a(1, 2) a?.b a(...b) a?.[0] a?.()
 + unary expression: %
-+ unary expression: + - ! ~ not
++ unary expression: + - ! ~ not await
 + binary expression: **
 + binary expression: * / %
 + binary expression: + -

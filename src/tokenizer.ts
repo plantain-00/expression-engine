@@ -167,6 +167,13 @@ class Tokenizer {
         range
       }
     }
+    if (tokenName === 'await') {
+      return {
+        type: 'PunctuatorToken',
+        value: tokenName,
+        range
+      }
+    }
     return {
       type: 'Identifier',
       name: tokenName,

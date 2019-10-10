@@ -199,7 +199,7 @@ export interface UnaryExpression extends Node {
 /**
  * @public
  */
-export type UnaryOperator = '+' | '-' | '!' | '~' | '%'
+export type UnaryOperator = '+' | '-' | '!' | '~' | '%' | 'await'
 
 /**
  * @public

@@ -4,10 +4,10 @@ import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, po
  * @public
  */
 export function printExpression(expression: Expression): string {
-  return print(expression)
+  return print(expression, true)
 }
 
-function print(expression: Expression | SpreadElement | AssignmentPattern | RestElement | Property): string {
+function print(expression: Expression | SpreadElement | AssignmentPattern | RestElement | Property, isRoot = false): string {
   if (expression.type === 'NumericLiteral') {
     return expression.value.toString()
   }
@@ -48,9 +48,15 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
     if (postfixUnaryOperators.includes(expression.operator)) {
       return argument + expression.operator
     }
+    if (expression.operator === 'await') {
+      return expression.operator + ' ' + argument
+    }
     return expression.operator + argument
   }
   if (expression.type === 'BinaryExpression' || expression.type === 'LogicalExpression') {
+    if (isRoot) {
+      return print(expression.left) + ' ' + expression.operator + ' ' + print(expression.right)
+    }
     return '(' + print(expression.left) + ' ' + expression.operator + ' ' + print(expression.right) + ')'
   }
   if (expression.type === 'MemberExpression') {
