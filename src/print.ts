@@ -1,4 +1,4 @@
-import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, postfixBinaryOpeators } from '.'
+import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, postfixUnaryOperators } from '.'
 
 /**
  * @public
@@ -45,7 +45,7 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
   }
   if (expression.type === 'UnaryExpression') {
     const argument = print(expression.argument)
-    if (postfixBinaryOpeators.includes(expression.operator)) {
+    if (postfixUnaryOperators.includes(expression.operator)) {
       return argument + expression.operator
     }
     return expression.operator + argument

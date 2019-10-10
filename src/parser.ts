@@ -75,7 +75,7 @@ class Parser {
         if (priorizedBinaryOperators.some((p) => p.some((c) => c === operator.value))) {
           return this.parseBinaryExpression(left, operator, right, range)
         }
-      } else if (right.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(right.value)) {
+      } else if (right.type === 'PunctuatorToken' && postfixUnaryOperators.includes(right.value)) {
         const expression = this.parseExpression([operator, right], [operator.range[0], range[1]])
         return this.parseExpression([left, expression], range)
       }
@@ -97,6 +97,26 @@ class Parser {
 
     if (tokens.some((t) => t.type === 'PunctuatorToken' && (callOperators.includes(t.value) || t.value === '(' || t.value === '['))) {
       return this.parseMemberOrCallExpression(tokens)
+    }
+
+    const postfixUnaryOperatorIndex = this.getPostfixUnaryOperatorIndex(tokens)
+    if (postfixUnaryOperatorIndex >= 0) {
+      const token1 = tokens[postfixUnaryOperatorIndex - 1]
+      const token2 = tokens[postfixUnaryOperatorIndex]
+      const postfixUnaryOperatorRange: [number, number] = [token1.range[0], token2.range[1]]
+      const newTokens = this.parseExpression([token1, token2], postfixUnaryOperatorRange)
+      tokens.splice(postfixUnaryOperatorIndex - 1, 2, newTokens)
+      return this.parseExpression(tokens, range)
+    }
+
+    const prefixUnaryOperatorIndex = this.getPrefixUnaryOperatorIndex(tokens)
+    if (prefixUnaryOperatorIndex >= 0) {
+      const token1 = tokens[prefixUnaryOperatorIndex]
+      const token2 = tokens[prefixUnaryOperatorIndex + 1]
+      const prefixUnaryOperatorRange: [number, number] = [token1.range[0], token2.range[1]]
+      const newTokens = this.parseExpression([token1, token2], prefixUnaryOperatorRange)
+      tokens.splice(prefixUnaryOperatorIndex, 2, newTokens)
+      return this.parseExpression(tokens, range)
     }
 
     for (const operators of priorizedBinaryOperators) {
@@ -352,6 +372,32 @@ class Parser {
     throw new Error(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]))
   }
 
+  private getPrefixUnaryOperatorIndex(tokens: (Token | Expression)[]) {
+    for (let i = tokens.length - 2; i >= 0; i--) {
+      const token = tokens[i]
+      if (token.type === 'PunctuatorToken'
+        && prefixUnaryOperators.includes(token.value)
+        && (i === 0 || tokens[i - 1].type === 'PunctuatorToken')
+        && tokens[i + 1].type !== 'PunctuatorToken') {
+        return i
+      }
+    }
+    return -1
+  }
+
+  private getPostfixUnaryOperatorIndex(tokens: (Token | Expression)[]) {
+    for (let i = 1; i < tokens.length; i++) {
+      const token = tokens[i]
+      if (token.type === 'PunctuatorToken'
+        && postfixUnaryOperators.includes(token.value)
+        && (i === tokens.length - 1 || tokens[i + 1].type === 'PunctuatorToken')
+        && tokens[i - 1].type !== 'PunctuatorToken') {
+        return i
+      }
+    }
+    return -1
+  }
+
   private parseMemberOrCallExpression(tokens: (Token | Expression)[]) {
     const newTokens: (Token | Expression)[] = []
     let expectCall = false
@@ -470,7 +516,7 @@ class Parser {
         }
       }
     }
-    if (operator.type === 'PunctuatorToken' && prefixBinaryOperators.includes(operator.value) && !isToken(token)) {
+    if (operator.type === 'PunctuatorToken' && prefixUnaryOperators.includes(operator.value) && !isToken(token)) {
       return {
         type: 'UnaryExpression',
         operator: operator.value as UnaryOperator,
@@ -478,7 +524,7 @@ class Parser {
         range
       }
     }
-    if (token.type === 'PunctuatorToken' && postfixBinaryOpeators.includes(token.value) && !isToken(operator)) {
+    if (token.type === 'PunctuatorToken' && postfixUnaryOperators.includes(token.value) && !isToken(operator)) {
       return {
         type: 'UnaryExpression',
         operator: '%',
@@ -501,7 +547,7 @@ class Parser {
       const previousToken = tokens[i - 2]
       return previousToken.type !== 'PunctuatorToken' || previousToken.value === ')' || previousToken.value === ']'
     }
-    return 
+    return false
   }
 
   private parseItems(tokens: (Token | Expression)[], startMarkIndex: number, endMarkIndex: number) {
@@ -596,7 +642,7 @@ function getFunctionArrowIndex(index: number, tokens: (Token | Expression)[]) {
     const nextToken = tokens[index + 1]
     if (nextToken.type === 'PunctuatorToken' && nextToken.value === '=>') {
       return index + 1
-  }
+    }
   }
   return -1
 }
@@ -616,8 +662,8 @@ const priorizedBinaryOperators = [
   ['|>']
 ]
 
-const prefixBinaryOperators = ['+', '-', '!', '~']
-export const postfixBinaryOpeators = ['%']
+const prefixUnaryOperators = ['+', '-', '!', '~']
+export const postfixUnaryOperators = ['%']
 
 const callOperators = ['.', '?.']
 
