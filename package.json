@@ -28,6 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "8.2.0",
     "@commitlint/config-conventional": "8.2.0",
+    "@microsoft/api-extractor": "^7.5.0",
     "@typescript-eslint/eslint-plugin": "2.3.2",
     "@typescript-eslint/parser": "2.3.2",
     "ava": "2.4.0",
@@ -47,7 +48,6 @@
   "module": "browser/index.js",
   "unpkg": "expression-engine.min.js",
   "jsdelivr": "expression-engine.min.js",
-  "types": "nodejs/index.d.ts",
   "typeCoverage": {
     "atLeast": 100
   },
