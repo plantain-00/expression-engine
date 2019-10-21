@@ -45,7 +45,7 @@ export interface BinaryExpression extends Node {
 }
 
 // @public (undocumented)
-export type BinaryOperator = '**' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '>>>' | '>' | '<' | '>=' | '<=' | '==' | '!=' | '===' | '!==' | '&&' | '&' | '^' | '|' | '||' | '??' | '|>';
+export type BinaryOperator = '**' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '>>>' | '>' | '<' | '>=' | '<=' | '==' | '!=' | '===' | '!==' | '&' | '^' | '|' | '|>';
 
 // @public (undocumented)
 export interface BooleanLiteral extends Node {
