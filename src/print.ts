@@ -38,7 +38,7 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
   if (expression.type === 'ArrowFunctionExpression') {
     const params = expression.params.map((p) => print(p)).join(', ')
     const body = print(expression.body)
-    if (expression.params.length === 1) {
+    if (expression.params.length === 1 && expression.params[0].type === 'Identifier') {
       return `${params} => ${body}`
     }
     return `(${params}) => ${body}`
