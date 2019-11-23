@@ -39,7 +39,8 @@ const properties = [
   'method',
   'id',
   'generator',
-  'async'
+  'async',
+  'errors'
 ]
 
 function transformAst (expression) {
