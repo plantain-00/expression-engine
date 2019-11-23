@@ -6,7 +6,6 @@ const title = 'member expression and call expression'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a.b()`, t, {
-    babel: true,
     context: {
       a: {
         b: () => 1

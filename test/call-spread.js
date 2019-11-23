@@ -6,7 +6,6 @@ const title = 'call spread'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a(...b)`, t, {
-    babel: true,
     context: {
       a: (...c) => Math.max(...c),
       b: [1, 2, 3]

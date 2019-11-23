@@ -4,7 +4,7 @@ const { parseExpression, tokenizeExpression, evaluateExpression, printExpression
 /**
  * @param {string} expression
  * @param {import('ava').Assertions} t
- * @param {{ context?: any, babel?: boolean }} options
+ * @param {{ context?: any, disableBabel?: boolean }} options
  */
 function testParser (expression, t, options) {
   options = { ...options }
@@ -14,7 +14,7 @@ function testParser (expression, t, options) {
   const ast = parseExpression(tokens)
   const thisTime = process.hrtime.bigint() - thisStartMoment
 
-  if (options.babel) {
+  if (!options.disableBabel) {
     const babelStartMoment = process.hrtime.bigint()
     const raw = babelParseExpression(expression, { ranges: true })
     const babelTime = process.hrtime.bigint() - babelStartMoment

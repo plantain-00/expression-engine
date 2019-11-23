@@ -6,7 +6,6 @@ const title = 'unary expression byte not'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`~a`, t, {
-    babel: true,
     context: {
       a: 123
     }

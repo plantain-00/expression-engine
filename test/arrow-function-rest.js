@@ -6,7 +6,6 @@ const title = `arrow function rest`
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`map([1, 2, 3], (a, ...b) => a * a + b[0])`, t, {
-    babel: true,
     context: {
       map: (array, c) => array.map((a, i) => c(a, i))
     }

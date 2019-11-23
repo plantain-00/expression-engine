@@ -6,7 +6,6 @@ const title = 'call expression'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`f(1, 2)`, t, {
-    babel: true,
     context: {
       f: (i, j) => i + j * j
     }

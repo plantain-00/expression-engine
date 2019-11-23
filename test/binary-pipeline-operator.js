@@ -6,6 +6,7 @@ const title = 'binary pipeline operator'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a |> double |> (_ => add(7, _))`, t, {
+    disableBabel: true,
     context: {
       a: 25,
       double: x => x + x,

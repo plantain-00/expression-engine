@@ -6,6 +6,7 @@ const title = 'and or not'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a > 0 and a < 2`, t, {
+    disableBabel: true,
     context: {
       a: 1
     }

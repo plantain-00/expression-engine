@@ -8,7 +8,6 @@ for (const expression of expressions) {
 
   test(title, (t) => {
     const { tokens, ast, result, printResult } = testParser(expression, t, {
-      babel: true,
       context: {
         a: 100,
         b: 1

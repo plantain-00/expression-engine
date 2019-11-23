@@ -16,9 +16,7 @@ for (const expression of expressions) {
   const title = `binary: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = testParser(expression, t, {
-      babel: true
-    })
+    const { tokens, ast, printResult } = testParser(expression, t)
     t.snapshot({ tokens, ast, printResult }, { id: title })
   })
 }

@@ -6,6 +6,7 @@ const title = 'unary expression percent 2'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`-a%`, t, {
+    disableBabel: true,
     context: {
       a: 123
     }

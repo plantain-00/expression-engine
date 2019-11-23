@@ -6,7 +6,6 @@ const title = `array literal`
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`[a, 2][0]`, t, {
-    babel: true,
     context: {
       a: 3
     }

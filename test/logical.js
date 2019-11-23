@@ -6,7 +6,6 @@ const title = 'logical expression'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a > 1 && a < 3 ? 4 : 5`, t, {
-    babel: true,
     context: {
       a: 2
     }

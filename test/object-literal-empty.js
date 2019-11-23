@@ -6,7 +6,6 @@ const title = 'object literal empty'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`{}`, t, {
-    babel: true,
     context: {}
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })

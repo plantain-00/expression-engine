@@ -6,6 +6,7 @@ const title = 'nullish-coalescing'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a??2`, t, {
+    disableBabel: true,
     context: {
       a: 0
     }

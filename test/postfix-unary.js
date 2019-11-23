@@ -11,6 +11,7 @@ for (const expression of expressions) {
 
   test(title, (t) => {
     const { tokens, ast, result, printResult } = testParser(expression, t, {
+      disableBabel: true,
       context: {}
     })
     t.snapshot({ tokens, ast, result, printResult }, { id: title })

@@ -10,8 +10,7 @@ test(title, (t) => {
       b: {
         c: 1
       }
-    },
-    babel: true
+    }
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

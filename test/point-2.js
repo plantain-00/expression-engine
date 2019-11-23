@@ -6,7 +6,6 @@ const title = 'point 2'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a[0].b`, t, {
-    babel: true,
     context: {
       a: [
         {

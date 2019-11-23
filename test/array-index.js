@@ -6,7 +6,6 @@ const title = 'array index'
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a[0]`, t, {
-    babel: true,
     context: {
       a: [1, 2]
     }

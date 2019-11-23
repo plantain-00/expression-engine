@@ -6,7 +6,6 @@ const title = `binary exponentiation`
 
 test(title, (t) => {
   const { tokens, ast, result, printResult } = testParser(`a ** 2`, t, {
-    babel: true,
     context: {
       a: 3
     }
