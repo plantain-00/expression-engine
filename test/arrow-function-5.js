@@ -1,13 +1,13 @@
 import test from 'ava'
 
-import { evaluateExpression } from '../dist/nodejs'
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const title = `arrow function 5`
 
 test(title, (t) => {
-  const { tokens, ast, printResult } = parseWithAcornToo(`(a = 1) => a`, t)
-  const result = evaluateExpression(ast, {
+  const { tokens, ast, result, printResult } = testParser(`(a = 1) => a`, t, {
+    babel: true,
+    context: {}
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

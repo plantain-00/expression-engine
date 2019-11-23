@@ -1,8 +1,6 @@
 import test from 'ava'
 
-import { parseWithAcornToo } from './utils'
-
-import { evaluateExpression } from '../dist/nodejs'
+import { testParser } from './utils'
 
 const expressions = [
   '1+-2',
@@ -12,8 +10,10 @@ for (const expression of expressions) {
   const title = `prefix unary: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
-    const result = evaluateExpression(ast, {})
+    const { tokens, ast, result, printResult } = testParser(expression, t, {
+      babel: true,
+      context: {}
+    })
     t.snapshot({ tokens, ast, result, printResult }, { id: title })
   })
 }

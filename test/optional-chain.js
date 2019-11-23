@@ -1,13 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
+import { testParser } from './utils'
 
 const title = 'optional chain'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`a?.b`)
-  const ast = parseExpression(tokens)
-  const result = evaluateExpression(ast, {})
-  const printResult = printExpression(ast)
+  const { tokens, ast, result, printResult } = testParser(`a?.b`, t, {
+    context: {}
+  })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

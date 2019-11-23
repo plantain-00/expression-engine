@@ -1,13 +1,12 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
+import { testParser } from './utils'
 
 const title = 'numeric separator'
 
 test(title, (t) => {
-  const tokens = tokenizeExpression(`123_456`)
-  const ast = parseExpression(tokens)
-  const result = evaluateExpression(ast, {})
-  const printResult = printExpression(ast)
+  const { tokens, ast, result, printResult } = testParser(`123_456`, t, {
+    context: {}
+  })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

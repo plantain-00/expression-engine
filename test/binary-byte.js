@@ -1,17 +1,18 @@
 import test from 'ava'
 
-import { evaluateExpression } from '../dist/nodejs'
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const expressions = ['a & b', 'a | b', 'a ^ b', 'a >> b', 'a << b', 'a >>> b']
 for (const expression of expressions) {
   const title = `binary byte: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
-    const result = evaluateExpression(ast, {
-      a: 100,
-      b: 1
+    const { tokens, ast, result, printResult } = testParser(expression, t, {
+      babel: true,
+      context: {
+        a: 100,
+        b: 1
+      }
     })
     t.snapshot({ tokens, ast, result, printResult }, { id: title })
   })

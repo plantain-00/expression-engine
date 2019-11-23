@@ -1,15 +1,16 @@
 import test from 'ava'
 
-import { evaluateExpression } from '../dist/nodejs'
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const title = 'call spread'
 
 test(title, (t) => {
-  const { tokens, ast, printResult } = parseWithAcornToo(`a(...b)`, t)
-  const result = evaluateExpression(ast, {
-    a: (...c) => Math.max(...c),
-    b: [1, 2, 3]
+  const { tokens, ast, result, printResult } = testParser(`a(...b)`, t, {
+    babel: true,
+    context: {
+      a: (...c) => Math.max(...c),
+      b: [1, 2, 3]
+    }
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

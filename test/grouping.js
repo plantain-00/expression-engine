@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const expressions = [
   '(1) + (2  ) + 3',
@@ -10,7 +10,9 @@ for (const expression of expressions) {
   const title = `grouping: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
+    const { tokens, ast, printResult } = testParser(expression, t, {
+      babel: true
+    })
     t.snapshot({ tokens, ast, printResult }, { id: title })
   })
 }

@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../dist/nodejs'
+import { testParser } from './utils'
 
 const expressions = [
   '1+2%',
@@ -10,10 +10,9 @@ for (const expression of expressions) {
   const title = `postfix unary: ${expression}`
 
   test(title, (t) => {
-    const tokens = tokenizeExpression(expression)
-    const ast = parseExpression(tokens)
-    const result = evaluateExpression(ast, {})
-    const printResult = printExpression(ast)
+    const { tokens, ast, result, printResult } = testParser(expression, t, {
+      context: {}
+    })
     t.snapshot({ tokens, ast, result, printResult }, { id: title })
   })
 }

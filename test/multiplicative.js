@@ -1,13 +1,15 @@
 import test from 'ava'
 
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const expressions = ['x * y', 'x / y', '+ 42']
 for (const expression of expressions) {
   const title = `multiplicative: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
+    const { tokens, ast, printResult } = testParser(expression, t, {
+      babel: true
+    })
     t.snapshot({ tokens, ast, printResult }, { id: title })
   })
 }

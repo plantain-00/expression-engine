@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const expressions = [
   'y ? 1 : 2',
@@ -11,7 +11,9 @@ for (const expression of expressions) {
   const title = `condition: ${expression}`
 
   test(title, (t) => {
-    const { tokens, ast, printResult } = parseWithAcornToo(expression, t)
+    const { tokens, ast, printResult } = testParser(expression, t, {
+      babel: true
+    })
     t.snapshot({ tokens, ast, printResult }, { id: title })
   })
 }

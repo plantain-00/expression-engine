@@ -1,15 +1,16 @@
 import test from 'ava'
 
-import { evaluateExpression } from '../dist/nodejs'
-import { parseWithAcornToo } from './utils'
+import { testParser } from './utils'
 
 const title = 'object literal short hand'
 
 test(title, (t) => {
-  const { tokens, ast, printResult } = parseWithAcornToo(`b({ a })`, t)
-  const result = evaluateExpression(ast, {
-    a: 1,
-    b: c => c.a
+  const { tokens, ast, result, printResult } = testParser(`b({ a })`, t, {
+    babel: true,
+    context: {
+      a: 1,
+      b: c => c.a
+    }
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })
