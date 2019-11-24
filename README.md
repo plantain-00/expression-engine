@@ -118,11 +118,3 @@ const result = evaluateExpression(
 )
 // HighlightText { text: 'aaabbb', highlight: [ 1, 1, 2, 1 ] }
 ```
-
-## todo
-
-+ template string
-+ regex literal
-+ 123n
-+ object pattern as function parameter
-+ array pattern as function parameter
