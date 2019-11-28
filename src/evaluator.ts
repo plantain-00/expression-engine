@@ -103,7 +103,7 @@ function evalutate(
     return protocol.evaluateBinaryExpression(expression, context)
   }
   if (expression.type === 'MemberExpression') {
-    const object = protocol.evalutate(expression.object, context, isFirstIdentifier) as { [property: string]: unknown }
+    const object = protocol.evalutate(expression.object, context, true) as { [property: string]: unknown }
     const property = protocol.evalutate(expression.property, context, false) as string
     if (expression.optional && !object) {
       return undefined
