@@ -58,5 +58,8 @@
       "test/**/*",
       "!test/utils.js"
     ]
+  },
+  "dependencies": {
+    "tslib": "1"
   }
 }
