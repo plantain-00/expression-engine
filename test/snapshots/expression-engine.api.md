@@ -152,6 +152,9 @@ export interface FunctionParamsExpression extends Node {
 }
 
 // @public (undocumented)
+export function getIntellisenseContext(expression: string, cursorPosition: number): IntellisenseContext;
+
+// @public (undocumented)
 export function getLocale(locale: null | undefined | Locale): Locale;
 
 // @public (undocumented)
@@ -161,6 +164,9 @@ export interface Identifier extends Node {
     // (undocumented)
     type: 'Identifier';
 }
+
+// @public (undocumented)
+export type IntellisenseContext = StringLiteral | UnknownContext;
 
 // @public (undocumented)
 export interface KeywordToken extends Node {
@@ -311,6 +317,12 @@ export interface UnaryExpression extends Node {
 
 // @public (undocumented)
 export type UnaryOperator = '+' | '-' | '!' | '~' | '%' | 'await';
+
+// @public (undocumented)
+export interface UnknownContext {
+    // (undocumented)
+    type: 'unknown';
+}
 
 
 // (No @packageDocumentation comment for this package)
