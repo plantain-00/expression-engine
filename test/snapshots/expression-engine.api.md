@@ -155,6 +155,9 @@ export interface FunctionParamsExpression extends Node {
 export function getIntellisenseContext(expression: string, cursorPosition: number): IntellisenseContext;
 
 // @public (undocumented)
+export function getIntellisenseOptions(context: IntellisenseContext, schema: IntellisenseSchema): IntellisenseOption[];
+
+// @public (undocumented)
 export function getLocale(locale: null | undefined | Locale): Locale;
 
 // @public (undocumented)
@@ -167,6 +170,26 @@ export interface Identifier extends Node {
 
 // @public (undocumented)
 export type IntellisenseContext = StringLiteral | UnknownContext;
+
+// @public (undocumented)
+export interface IntellisenseOption extends IntellisenseStringEnum {
+    // (undocumented)
+    range: [number, number];
+}
+
+// @public (undocumented)
+export interface IntellisenseSchema {
+    // (undocumented)
+    stringEnums?: IntellisenseStringEnum[];
+}
+
+// @public (undocumented)
+export interface IntellisenseStringEnum {
+    // (undocumented)
+    description?: string;
+    // (undocumented)
+    name: string;
+}
 
 // @public (undocumented)
 export interface KeywordToken extends Node {

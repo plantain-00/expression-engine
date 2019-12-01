@@ -1,3 +1,19 @@
-import { getIntellisenseContext } from '../src'
+import { getIntellisenseContext, getIntellisenseOptions, parseExpression, tokenizeExpression, evaluateExpression } from '../src'
 
-console.info(getIntellisenseContext(`"a`, 2))
+const context = getIntellisenseContext(`"ver`, 4)
+console.info(context)
+console.info(getIntellisenseOptions(context, {
+  stringEnums: [
+    {
+      name: 'vertical'
+    },
+    {
+      name: 'horizontal'
+    }
+  ]
+}))
+
+const ast = parseExpression(tokenizeExpression(`"a"`))
+console.info(evaluateExpression(ast, {
+
+}))

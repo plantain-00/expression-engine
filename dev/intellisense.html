@@ -4,9 +4,18 @@
   const editor = document.querySelector('#editor')
   editor.onkeyup = (e) => {
     if (e.key !== 'Shift' && e.key !== 'Ctrl') {
-      console.info(e.key, ExpressionEngine.getIntellisenseContext(e.target.value, e.target.selectionStart))
-    } else {
-      console.info(e.key)
+      const context = ExpressionEngine.getIntellisenseContext(e.target.value, e.target.selectionStart)
+      const options = ExpressionEngine.getIntellisenseOptions(context, {
+        stringEnums: [
+          {
+            name: 'vertical'
+          },
+          {
+            name: 'horizontal'
+          }
+        ]
+      })
+      console.info(context, options)
     }
   }
 </script>
