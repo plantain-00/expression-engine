@@ -132,3 +132,4 @@ const result = evaluateExpression(
 + custom auto complete(eg, fontfamily)
 + auto complete ui components?
 + generate schema from function and object type definitions?
++ array, number, string, boolean's properties and methods(generated from ts lib declaration?)
