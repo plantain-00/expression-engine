@@ -161,6 +161,12 @@ export function getIntellisenseOptions(context: IntellisenseContext, schema: Int
 export function getLocale(locale: null | undefined | Locale): Locale;
 
 // @public (undocumented)
+export interface GlobalContext {
+    // (undocumented)
+    type: 'global';
+}
+
+// @public (undocumented)
 export interface Identifier extends Node {
     // (undocumented)
     name: string;
@@ -169,7 +175,7 @@ export interface Identifier extends Node {
 }
 
 // @public (undocumented)
-export type IntellisenseContext = StringLiteral | UnknownContext;
+export type IntellisenseContext = StringLiteral | GlobalContext | MemberContext | UnknownContext;
 
 // @public (undocumented)
 export interface IntellisenseOption extends IntellisenseStringEnum {
@@ -216,6 +222,12 @@ export interface LogicalExpression extends Node {
 
 // @public (undocumented)
 export type LogicalOperator = '||' | '&&' | '??';
+
+// @public (undocumented)
+export interface MemberContext {
+    // (undocumented)
+    type: 'member';
+}
 
 // @public (undocumented)
 export interface MemberExpression extends Node {

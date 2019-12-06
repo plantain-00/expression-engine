@@ -69,7 +69,25 @@ export interface IntellisenseStringEnum {
 /**
  * @public
  */
-export type IntellisenseContext = StringLiteral | UnknownContext
+export type IntellisenseContext =
+  | StringLiteral
+  | GlobalContext
+  | MemberContext
+  | UnknownContext
+
+/**
+ * @public
+ */
+export interface GlobalContext {
+  type: 'global'
+}
+
+/**
+ * @public
+ */
+export interface MemberContext {
+  type: 'member'
+}
 
 /**
  * @public

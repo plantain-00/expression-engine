@@ -69,3 +69,5 @@ service-worker.js
 #index.html
 *.data
 temp
+dev/intellisense-ui.js
+dev/index.bundle.js
