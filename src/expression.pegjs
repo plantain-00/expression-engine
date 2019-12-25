@@ -203,16 +203,49 @@ ParenthesesExpression
   / Identifier
 
 Literal
-  = Integer
+  = NumericLiteral
   / StringLiteral
   / BooleanLiteral
   / NullLiteral
   / ObjectLiteral
   / ArrayLiteral
 
-Integer "integer"
-  = _ [0-9]+ { return buildNumericLiteral(parseInt(text(), 10)); }
-
+NumericLiteral "number"
+  = literal:HexIntegerLiteral !(IdentifierStart / DecimalDigit) {
+      return literal;
+    }
+  / literal:DecimalLiteral !(IdentifierStart / DecimalDigit) {
+      return literal;
+    }
+HexIntegerLiteral
+  = "0x"i digits:$HexDigit+ {
+      return buildNumericLiteral(parseInt(digits, 16));
+    }
+DecimalDigit
+  = [0-9]
+NonZeroDigit
+  = [1-9]
+DecimalLiteral
+  = DecimalIntegerLiteral "." DecimalDigit* ExponentPart? {
+      return buildNumericLiteral(parseFloat(text()));
+    }
+  / "." DecimalDigit+ ExponentPart? {
+      return buildNumericLiteral(parseFloat(text()));
+    }
+  / DecimalIntegerLiteral ExponentPart? {
+      return buildNumericLiteral(parseFloat(text()));
+    }
+HexDigit
+  = [0-9a-f]i
+DecimalIntegerLiteral
+  = "0"
+  / NonZeroDigit DecimalDigit*
+ExponentPart
+  = ExponentIndicator SignedInteger
+ExponentIndicator
+  = "e"i
+SignedInteger
+  = [+-]? DecimalDigit+
 StringLiteral "string"
   = '"' chars:DoubleStringCharacter* '"' {
       var loc = location()
@@ -337,7 +370,7 @@ PropertyAssignment
 PropertyName
   = Identifier
   / StringLiteral
-  / Integer
+  / NumericLiteral
 
 PrefixUnaryOperator
   = "+"
