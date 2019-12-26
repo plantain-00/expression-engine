@@ -169,6 +169,7 @@ PrefixUnaryExpression
 MemberExpression
   = head:ParenthesesExpression tail:(
         _ "[" _ property:Expression _ "]" {
+          property.inBrackets = true
           return property;
         }
       / _ "." _ property:Identifier {
@@ -177,12 +178,22 @@ MemberExpression
     )*
     {
       return tail.reduce(function(result, property) {
-        var loc = location()
+        var range
+        if (tail.length === 1) {
+          var loc = location()
+          range = [loc.start.offset, loc.end.offset]
+        } else {
+          range = [result.range[0], property.range[1]]
+          if (property.inBrackets) {
+            range[1]++
+          }
+        }
+        delete property.inBrackets
         return {
           type: 'MemberExpression',
           object: result,
           property: property,
-          range: [loc.start.offset, loc.end.offset]
+          range: range,
         };
       }, head);
     }
