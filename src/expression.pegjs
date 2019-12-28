@@ -175,6 +175,14 @@ MemberExpression
       / _ "." _ property:Identifier {
           return property;
         }
+      / _ "?.[" _ property:Expression _ "]" {
+          property.optional = true
+          return property;
+        }
+      / _ "?." _ property:Identifier {
+          property.optional = true
+          return property;
+        }
     )*
     {
       return tail.reduce(function(result, property) {
@@ -189,6 +197,16 @@ MemberExpression
           }
         }
         delete property.inBrackets
+        if (property.optional) {
+          delete property.optional
+          return {
+            type: 'MemberExpression',
+            object: result,
+            property: property,
+            range: range,
+            optional: true,
+          };
+        }
         return {
           type: 'MemberExpression',
           object: result,
