@@ -243,12 +243,26 @@ NumericLiteral "number"
   = literal:HexIntegerLiteral !(IdentifierStart / DecimalDigit) {
       return literal;
     }
+  / literal:BinaryIntegerLiteral !(IdentifierStart / DecimalDigit) {
+      return literal;
+    }
+  / literal:OctalIntegerLiteral !(IdentifierStart / DecimalDigit) {
+      return literal;
+    }
   / literal:DecimalLiteral !(IdentifierStart / DecimalDigit) {
       return literal;
     }
 HexIntegerLiteral
   = "0x"i digits:$HexDigit+ {
       return buildNumericLiteral(parseInt(digits, 16));
+    }
+BinaryIntegerLiteral
+  = "0b"i digits:$BinaryDigit+ {
+      return buildNumericLiteral(parseInt(digits, 2));
+    }
+OctalIntegerLiteral
+  = "0o"i digits:$OctalDigit+ {
+      return buildNumericLiteral(parseInt(digits, 8));
     }
 DecimalDigit
   = [0-9]
@@ -266,6 +280,10 @@ DecimalLiteral
     }
 HexDigit
   = [0-9a-f]i
+BinaryDigit
+  = [0-1]i
+OctalDigit
+  = [0-7]i
 DecimalIntegerLiteral
   = "0"
   / NonZeroDigit DecimalDigit*
