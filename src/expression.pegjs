@@ -176,6 +176,7 @@ MemberExpression
           return property;
         }
       / _ "?.[" _ property:Expression _ "]" {
+          property.inBrackets = true
           property.optional = true
           return property;
         }
@@ -410,6 +411,7 @@ PropertyAssignment
         type: "Property",
         key: key,
         value: value,
+        shorthand: false,
         range: [loc.start.offset, loc.end.offset]
       };
     }
