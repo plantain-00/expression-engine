@@ -255,36 +255,36 @@ NumericLiteral "number"
     }
 HexIntegerLiteral
   = "0x"i digits:$HexDigit+ {
-      return buildNumericLiteral(parseInt(digits, 16));
+      return buildNumericLiteral(parseInt(digits.split('_').join(''), 16));
     }
 BinaryIntegerLiteral
   = "0b"i digits:$BinaryDigit+ {
-      return buildNumericLiteral(parseInt(digits, 2));
+      return buildNumericLiteral(parseInt(digits.split('_').join(''), 2));
     }
 OctalIntegerLiteral
   = "0o"i digits:$OctalDigit+ {
-      return buildNumericLiteral(parseInt(digits, 8));
+      return buildNumericLiteral(parseInt(digits.split('_').join(''), 8));
     }
 DecimalDigit
-  = [0-9]
+  = [0-9_]
 NonZeroDigit
   = [1-9]
 DecimalLiteral
   = DecimalIntegerLiteral "." DecimalDigit* ExponentPart? {
-      return buildNumericLiteral(parseFloat(text()));
+      return buildNumericLiteral(parseFloat(text().split('_').join('')));
     }
   / "." DecimalDigit+ ExponentPart? {
-      return buildNumericLiteral(parseFloat(text()));
+      return buildNumericLiteral(parseFloat(text().split('_').join('')));
     }
   / DecimalIntegerLiteral ExponentPart? {
-      return buildNumericLiteral(parseFloat(text()));
+      return buildNumericLiteral(parseFloat(text().split('_').join('')));
     }
 HexDigit
-  = [0-9a-f]i
+  = [0-9a-f_]i
 BinaryDigit
-  = [0-1]i
+  = [0-1_]i
 OctalDigit
-  = [0-7]i
+  = [0-7_]i
 DecimalIntegerLiteral
   = "0"
   / NonZeroDigit DecimalDigit*
