@@ -155,7 +155,7 @@ ExponentiationBinaryExpression
     }
 
 PrefixUnaryExpression
-  = operator:PrefixUnaryOperator _ argument:MemberExpression {
+  = operator:PrefixUnaryOperator _ argument:CallExpression {
       var loc = location()
       return {
         type: 'UnaryExpression',
@@ -164,7 +164,29 @@ PrefixUnaryExpression
         range: [loc.start.offset, loc.end.offset]
       };
     }
+  / CallExpression
+
+CallExpression
+  = callee:MemberExpression _ args:Arguments {
+      var loc = location()
+      return {
+        type: "CallExpression",
+        callee: callee,
+        arguments: args,
+        range: [loc.start.offset, loc.end.offset],
+      };
+    }
   / MemberExpression
+
+Arguments
+  = "(" _ args:(ArgumentList _)? ")" {
+      return optionalList(extractOptional(args, 0));
+    }
+
+ArgumentList
+  = head:MemberExpression tail:(_ "," _ MemberExpression)* {
+      return buildList(head, tail, 3);
+    }
 
 MemberExpression
   = head:ParenthesesExpression tail:(
