@@ -22,7 +22,7 @@ function testParser (expression, t, options) {
     const babelAst = transformAst(raw)
   
     if (thisTime > babelTime) {
-      console.info(Math.round(Number(thisTime) * 100 / Number(babelTime)) * 0.01, expression, babelTime, thisTime)
+      console.info(Math.round(Number(thisTime) * 100 / Number(babelTime)) / 100, expression, babelTime, thisTime)
     }
     // t.assert(thisTime - babelTime <= 0)
   

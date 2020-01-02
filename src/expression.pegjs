@@ -176,6 +176,16 @@ CallExpression
         range: [loc.start.offset, loc.end.offset],
       };
     }
+  / callee:MemberExpression _ '?.' args:Arguments {
+      var loc = location()
+      return {
+        type: "CallExpression",
+        callee: callee,
+        arguments: args,
+        optional: true,
+        range: [loc.start.offset, loc.end.offset],
+      };
+    }
   / MemberExpression
 
 Arguments
