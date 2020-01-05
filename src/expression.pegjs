@@ -7,15 +7,15 @@
         range = [loc.start.offset, loc.end.offset]
       } else {
         range = [result.range[0], element[3].range[1]]
-        if (result.inParentheses) {
-          range[0]--
+        if (result.parenthesesRange) {
+          range[0] = result.parenthesesRange[0]
         }
-        if (element[3].inParentheses) {
-          range[1]++
+        if (element[3].parenthesesRange) {
+          range[1] = element[3].parenthesesRange[1]
         }
       }
-      delete result.inParentheses
-      delete element[3].inParentheses
+      delete result.parenthesesRange
+      delete element[3].parenthesesRange
       return {
         type: 'BinaryExpression',
         operator: element[1],
@@ -251,7 +251,8 @@ MemberExpression
 
 ParenthesesExpression
   = "(" _ expression:Expression _ ")" {
-    expression.inParentheses = true
+    var loc = location()
+    expression.parenthesesRange = [loc.start.offset, loc.end.offset]
     return expression;
   }
   / Literal
