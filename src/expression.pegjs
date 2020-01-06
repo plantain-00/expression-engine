@@ -194,26 +194,30 @@ Arguments
     }
 
 ArgumentList
-  = head:MemberExpression tail:(_ "," _ MemberExpression)* {
+  = spread:"..."? head:MemberExpression tail:(_ "," _ MemberExpression)* {
+      if (spread) {
+        head = {
+          type: 'SpreadElement',
+          argument: head,
+          range: [head.range[0] - 3, head.range[1]],
+        }
+      }
       return buildList(head, tail, 3);
     }
 
 MemberExpression
   = head:ParenthesesExpression tail:(
-        _ "[" _ property:Expression _ "]" {
+        _ optional:"?."? "[" _ property:Expression _ "]" {
           property.inBrackets = true
+          if (optional) {
+            property.optional = true
+          }
           return property;
         }
-      / _ "." _ property:Identifier {
-          return property;
-        }
-      / _ "?.[" _ property:Expression _ "]" {
-          property.inBrackets = true
-          property.optional = true
-          return property;
-        }
-      / _ "?." _ property:Identifier {
-          property.optional = true
+      / _ optional:"?"? "." _ property:Identifier {
+          if (optional) {
+            property.optional = true
+          }
           return property;
         }
     )*
