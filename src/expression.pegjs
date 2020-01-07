@@ -452,6 +452,16 @@ PropertyAssignment
         range: [loc.start.offset, loc.end.offset]
       };
     }
+  / key:PropertyName {
+      var loc = location()
+      return {
+        type: "Property",
+        key: key,
+        value: key,
+        shorthand: true,
+        range: [loc.start.offset, loc.end.offset]
+      };
+    }
 
 PropertyName
   = Identifier
