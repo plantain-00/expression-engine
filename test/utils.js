@@ -1,6 +1,6 @@
 const { parseExpression: babelParseExpression } = require('@babel/parser')
 const { parseExpression, tokenizeExpression, evaluateExpression, printExpression } = require('../dist/nodejs')
-// const { parse: pegJsParse } = require('../dist/expression-parser.peg')
+const { parse: pegJsParse } = require('../dist/expression-parser.peg')
 
 /**
  * @param {string} expression
@@ -30,8 +30,8 @@ function testParser (expression, t, options) {
   }
   
   if (!options.disablePegjs) {
-    // const pegJsAst = pegJsParse(expression)
-    // t.deepEqual(ast, pegJsAst)
+    const pegJsAst = pegJsParse(expression)
+    t.deepEqual(ast, pegJsAst)
   }
 
   const result = options.context ? evaluateExpression(ast, options.context) : undefined

@@ -10,7 +10,8 @@ test(title, (t) => {
       a: {
         b: () => [1]
       }
-    }
+    },
+    disablePegjs: true // todo
   })
   t.snapshot({ tokens, ast, result, printResult }, { id: title })
 })

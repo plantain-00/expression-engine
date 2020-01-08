@@ -254,7 +254,48 @@ MemberExpression
     }
 
 ParenthesesExpression
-  = "(" _ expression:Expression _ ")" {
+  = "(" _ rest:"..."? _ head:Identifier assignment:(_ "=" _ Literal)? tail:(_ "," _ "..."? _ Identifier (_ "=" _ Literal)?)* _ ")" _ "=>" _ body:Expression {
+    var loc = location()
+    if (assignment) {
+      head = {
+        type: 'AssignmentPattern',
+        left: head,
+        right: assignment[3],
+        range: [head.range[0], assignment[3].range[1]],
+      }
+    }
+    if (rest) {
+      head = {
+        type: 'RestElement',
+        argument: head,
+        range: [head.range[0] - 3, head.range[1]],
+      }
+    }
+    return {
+      type: 'ArrowFunctionExpression',
+      params: tail.reduce(function (p,c) {
+        if (c[6]) {
+          c[5] = {
+            type: 'AssignmentPattern',
+            left: c[5],
+            right: c[6][3],
+            range: [c[5].range[0], c[6][3].range[1]],
+          }
+        }
+        if (c[3]) {
+          c[5] = {
+            type: 'RestElement',
+            argument: c[5],
+            range: [c[5].range[0] - 3, c[5].range[1]],
+          }
+        }
+        return p.concat(c[5]);
+      }, [head]),
+      body: body,
+      range: [loc.start.offset, loc.end.offset]
+    }
+  }
+  / "(" _ expression:Expression _ ")" {
     var loc = location()
     expression.parenthesesRange = [loc.start.offset, loc.end.offset]
     return expression;
@@ -267,6 +308,17 @@ ParenthesesExpression
         range: [loc.start.offset, loc.end.offset]
       };
     }
+  / identifier:Identifier _ "=>" _ body:Expression {
+    var loc = location()
+    return {
+      type: 'ArrowFunctionExpression',
+      params: [
+        identifier,
+      ],
+      body: body,
+      range: [loc.start.offset, loc.end.offset]
+    }
+  }
   / Identifier
 
 Literal
@@ -427,7 +479,14 @@ ElementList
       }
     )
     tail:(
-      _ "," _ elision:(Elision _)? element:Expression {
+      _ "," _ elision:(Elision _)? _ spread:"..."? element:Expression {
+        if (spread) {
+          element = {
+            type: 'SpreadElement',
+            argument: element,
+            range: [element.range[0] - 3, element.range[1]],
+          }
+        }
         return optionalList(extractOptional(elision, 0)).concat(element);
       }
     )*
@@ -450,6 +509,14 @@ PropertyAssignment
         value: value,
         shorthand: false,
         range: [loc.start.offset, loc.end.offset]
+      };
+    }
+  / "..." argument:PropertyName {
+      var loc = location()
+      return {
+        type: "SpreadElement",
+        argument: argument,
+        range: [loc.start.offset, loc.end.offset],
       };
     }
   / key:PropertyName {
