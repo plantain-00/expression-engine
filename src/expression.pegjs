@@ -16,28 +16,16 @@
       }
       delete result.parenthesesRange
       delete element[3].parenthesesRange
-      return {
-        type: 'BinaryExpression',
-        operator: element[1],
-        left: result,
-        right: element[3],
-        range: range
+      var operator = element[1]
+      if (operator === 'and') {
+        operator = '&&'
+      } else if (operator === 'or') {
+        operator = '||'
       }
-    }, head)
-  }
-
-  function buildLogicalExpression(head, tail) {
-    return tail.reduce(function (result, element) {
-      var range
-      if (tail.length === 1) {
-        var loc = location()
-        range = [loc.start.offset, loc.end.offset]
-      } else {
-        range = [result.range[0], element[3].range[1]]
-      }
+      var type = operator === '&&' || operator === '||' || operator === '??' ? 'LogicalExpression' : 'BinaryExpression'
       return {
-        type: 'LogicalExpression',
-        operator: element[1] === 'and' ? '&&' : (element[1] === 'or' ? '||' : element[1]),
+        type: type,
+        operator: operator,
         left: result,
         right: element[3],
         range: range
@@ -54,17 +42,8 @@
     }
   }
 
-  function extractList(list, index) {
-    return list.map(function(element) { return element[index]; });
-  }
-
   function buildList(head, tail, index) {
-    return [head].concat(extractList(tail, index));
-  }
-
-  function filledArray(count, value) {
-    return Array.apply(null, new Array(count))
-      .map(function() { return value; });
+    return [head].concat(tail.map(function(element) { return element[index]; }));
   }
 
   function optionalList(value) {
@@ -79,10 +58,7 @@
 Expression = ConditionalExpression
 
 ConditionalExpression
-  = test:PipelineBinaryExpression _
-    "?" _ consequent:Expression _
-    ":" _ alternate:Expression
-    {
+  = test:PipelineBinaryExpression _ "?" _ consequent:Expression _ ":" _ alternate:Expression {
       var loc = location()
       return {
         type: "ConditionalExpression",
@@ -95,33 +71,33 @@ ConditionalExpression
   / PipelineBinaryExpression
 
 PipelineBinaryExpression
-  = head:OrLogicalExpression tail:(_ ("|>") _ OrLogicalExpression)* {
+  = head:OrLogicalExpression tail:(_ "|>" _ OrLogicalExpression)* {
       return buildBinaryExpression(head, tail);
     }
 
 OrLogicalExpression
   = head:BitwiseOrBinaryExpression tail:(_ ("||" / "or" / "??") _ BitwiseOrBinaryExpression)* {
-      return buildLogicalExpression(head, tail);
+      return buildBinaryExpression(head, tail);
     }
 
 BitwiseOrBinaryExpression
-  = head:BitwiseXorBinaryExpression tail:(_ ("|") _ BitwiseXorBinaryExpression)* {
+  = head:BitwiseXorBinaryExpression tail:(_ "|" _ BitwiseXorBinaryExpression)* {
       return buildBinaryExpression(head, tail);
     }
 
 BitwiseXorBinaryExpression
-  = head:BitwiseAndBinaryExpression tail:(_ ("^") _ BitwiseAndBinaryExpression)* {
+  = head:BitwiseAndBinaryExpression tail:(_ "^" _ BitwiseAndBinaryExpression)* {
       return buildBinaryExpression(head, tail);
     }
 
 BitwiseAndBinaryExpression
-  = head:AndLogicalExpression tail:(_ ("&") _ AndLogicalExpression)* {
+  = head:AndLogicalExpression tail:(_ "&" _ AndLogicalExpression)* {
       return buildBinaryExpression(head, tail);
     }
 
 AndLogicalExpression
   = head:EqualityBinaryExpression tail:(_ ("&&" / "and") _ EqualityBinaryExpression)* {
-      return buildLogicalExpression(head, tail);
+      return buildBinaryExpression(head, tail);
     }
 
 EqualityBinaryExpression
@@ -150,7 +126,7 @@ MultiplicativeBinaryExpression
     }
 
 ExponentiationBinaryExpression
-  = head:PrefixUnaryExpression tail:(_ ("**") _ PrefixUnaryExpression)* {
+  = head:PrefixUnaryExpression tail:(_ "**" _ PrefixUnaryExpression)* {
       return buildBinaryExpression(head, tail);
     }
 
@@ -493,7 +469,7 @@ ElementList
     { return Array.prototype.concat.apply(head, tail); }
 
 Elision
-  = "," commas:(_ ",")* { return filledArray(commas.length + 1, null); }
+  = "," commas:(_ ",")* { return new Array(commas.length + 1).map(function() { return null; }); }
 
 PropertyNameAndValueList
   = head:PropertyAssignment tail:(_ "," _ PropertyAssignment)* {
