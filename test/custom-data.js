@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import { tokenizeExpression, parseExpression, evaluateExpression } from '../dist/nodejs'
+const { tokenizeExpression, parseExpression, evaluateExpression } = require('../dist/nodejs')
 
 const title = 'custom data'
 

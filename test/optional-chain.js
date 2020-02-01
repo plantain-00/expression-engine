@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import { testParser } from './utils'
+const { testParser } = require('./utils')
 
 const title = 'optional chain'
 

@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import { testParser } from './utils'
+const { testParser } = require('./utils')
 
 const expressions = ['0x123', '0b101', '0o123', '2e2', '2E-2']
 for (const expression of expressions) {

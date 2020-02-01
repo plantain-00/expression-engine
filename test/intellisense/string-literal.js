@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import { getIntellisenseContext } from '../../dist/nodejs'
+const { getIntellisenseContext } = require('../../dist/nodejs')
 
 const title = `string literal`
 

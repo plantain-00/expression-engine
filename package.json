@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/plantain-00/expression-engine#readme",
   "devDependencies": {
+    "@babel/parser": "7.8.4",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@microsoft/api-extractor": "7.7.8",
