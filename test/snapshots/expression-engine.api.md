@@ -138,7 +138,9 @@ export interface EOFToken extends Node {
 // @public (undocumented)
 export function evaluateExpression(expression: Expression, context: {
     [name: string]: unknown;
-}, locale?: Locale, isCustomData?: (value: unknown) => value is CustomData): unknown;
+}, locale?: Locale, customData?: Array<{
+    new (...args: any[]): unknown;
+}> | ((value: unknown) => value is CustomData)): unknown;
 
 // @public (undocumented)
 export type Expression = BinaryExpression | MemberExpression | Identifier | NumericLiteral | StringLiteral | ConditionalExpression | CallExpression | LogicalExpression | UnaryExpression | ThisExpression | BooleanLiteral | ArrayExpression | ObjectExpression | NullLiteral | ArrowFunctionExpression | FunctionParamsExpression;

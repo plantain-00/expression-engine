@@ -101,10 +101,6 @@ class HighlightText implements CustomData {
   }
 }
 
-function isCustomData(value: unknown): value is CustomData {
-  return value instanceof HighlightText
-}
-
 const tokens = tokenizeExpression('a + b')
 const ast = parseExpression(tokens)
 const result = evaluateExpression(
@@ -114,7 +110,7 @@ const result = evaluateExpression(
     b: new HighlightText('bbb', [1, 1])
   },
   undefined,
-  isCustomData
+  [HighlightText]
 )
 // HighlightText { text: 'aaabbb', highlight: [ 1, 1, 2, 1 ] }
 ```

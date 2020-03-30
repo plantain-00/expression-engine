@@ -7,9 +7,13 @@ export function evaluateExpression(
   expression: Expression,
   context: { [name: string]: unknown },
   locale?: Locale,
-  isCustomData?: (value: unknown) => value is CustomData
+  // type-coverage:ignore-next-line
+  customData?: Array<{ new(...args: any[]): unknown }> | ((value: unknown) => value is CustomData)
 ) {
   const evaluator = isAsync(expression) ? AsyncEvaluator : Evaluator
+  const isCustomData = Array.isArray(customData)
+    ? ((value: unknown) => customData.some((c) => value instanceof c)) as (value: unknown) => value is CustomData
+    : customData
   return new evaluator(locale, isCustomData).evalutate(expression, context, true)
 }
 

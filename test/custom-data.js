@@ -48,10 +48,6 @@ class HighlightText {
   }
 }
 
-function isCustomData(value) {
-  return value instanceof HighlightText
-}
-
 test(title, (t) => {
   const ast1 = parseExpression(tokenizeExpression('a + b'))
   const result1 = evaluateExpression(
@@ -61,7 +57,7 @@ test(title, (t) => {
       b: new HighlightText('bbb', [1, 1])
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   const result2 = evaluateExpression(
     ast1,
@@ -70,7 +66,7 @@ test(title, (t) => {
       b: 'bbb'
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   const result3 = evaluateExpression(
     ast1,
@@ -79,7 +75,7 @@ test(title, (t) => {
       b: new HighlightText('bbb', [1, 1])
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   const result4 = evaluateExpression(
     ast1,
@@ -88,7 +84,7 @@ test(title, (t) => {
       b: 'bbb'
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
 
   const ast2 = parseExpression(tokenizeExpression('a == b'))
@@ -99,7 +95,7 @@ test(title, (t) => {
       b: new HighlightText('aaa', [1, 1])
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   const result6 = evaluateExpression(
     ast2,
@@ -108,7 +104,7 @@ test(title, (t) => {
       b: 'aaa'
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   const result7 = evaluateExpression(
     ast2,
@@ -117,7 +113,7 @@ test(title, (t) => {
       b: new HighlightText('aaa')
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
 
   const ast3 = parseExpression(tokenizeExpression('a != b'))
@@ -128,7 +124,7 @@ test(title, (t) => {
       b: new HighlightText('aaa', [1, 1])
     },
     undefined,
-    isCustomData
+    [HighlightText]
   )
   t.snapshot({ result1, result2, result3, result4, result5, result6, result7, result8 }, { id: title })
 })
