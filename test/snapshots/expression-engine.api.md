@@ -5,7 +5,7 @@
 ```ts
 
 // @public (undocumented)
-export interface ArrayExpression extends Node {
+export interface ArrayExpression extends Node_2 {
     // (undocumented)
     elements: (Expression | SpreadElement)[];
     // (undocumented)
@@ -13,7 +13,7 @@ export interface ArrayExpression extends Node {
 }
 
 // @public (undocumented)
-export interface ArrowFunctionExpression extends Node {
+export interface ArrowFunctionExpression extends Node_2 {
     // (undocumented)
     body: Expression;
     // (undocumented)
@@ -23,7 +23,7 @@ export interface ArrowFunctionExpression extends Node {
 }
 
 // @public (undocumented)
-export interface AssignmentPattern extends Node {
+export interface AssignmentPattern extends Node_2 {
     // (undocumented)
     left: Identifier;
     // (undocumented)
@@ -33,7 +33,7 @@ export interface AssignmentPattern extends Node {
 }
 
 // @public (undocumented)
-export interface BinaryExpression extends Node {
+export interface BinaryExpression extends Node_2 {
     // (undocumented)
     left: Expression;
     // (undocumented)
@@ -48,7 +48,7 @@ export interface BinaryExpression extends Node {
 export type BinaryOperator = '**' | '*' | '/' | '%' | '+' | '-' | '<<' | '>>' | '>>>' | '>' | '<' | '>=' | '<=' | '==' | '!=' | '===' | '!==' | '&' | '^' | '|' | '|>';
 
 // @public (undocumented)
-export interface BooleanLiteral extends Node {
+export interface BooleanLiteral extends Node_2 {
     // (undocumented)
     type: 'BooleanLiteral';
     // (undocumented)
@@ -56,7 +56,7 @@ export interface BooleanLiteral extends Node {
 }
 
 // @public (undocumented)
-export interface CallExpression extends Node {
+export interface CallExpression extends Node_2 {
     // (undocumented)
     arguments: (Expression | SpreadElement)[];
     // (undocumented)
@@ -68,7 +68,7 @@ export interface CallExpression extends Node {
 }
 
 // @public (undocumented)
-export interface ConditionalExpression extends Node {
+export interface ConditionalExpression extends Node_2 {
     // (undocumented)
     alternate: Expression;
     // (undocumented)
@@ -130,7 +130,7 @@ export const defaultLocale: {
 };
 
 // @public (undocumented)
-export interface EOFToken extends Node {
+export interface EOFToken extends Node_2 {
     // (undocumented)
     type: 'EOFToken';
 }
@@ -146,7 +146,7 @@ export function evaluateExpression(expression: Expression, context: {
 export type Expression = BinaryExpression | MemberExpression | Identifier | NumericLiteral | StringLiteral | ConditionalExpression | CallExpression | LogicalExpression | UnaryExpression | ThisExpression | BooleanLiteral | ArrayExpression | ObjectExpression | NullLiteral | ArrowFunctionExpression | FunctionParamsExpression;
 
 // @public (undocumented)
-export interface FunctionParamsExpression extends Node {
+export interface FunctionParamsExpression extends Node_2 {
     // (undocumented)
     params: Pattern[];
     // (undocumented)
@@ -169,7 +169,7 @@ export interface GlobalContext {
 }
 
 // @public (undocumented)
-export interface Identifier extends Node {
+export interface Identifier extends Node_2 {
     // (undocumented)
     name: string;
     // (undocumented)
@@ -200,7 +200,7 @@ export interface IntellisenseStringEnum {
 }
 
 // @public (undocumented)
-export interface KeywordToken extends Node {
+export interface KeywordToken extends Node_2 {
     // (undocumented)
     name: string;
     // (undocumented)
@@ -211,7 +211,7 @@ export interface KeywordToken extends Node {
 export type Locale = typeof defaultLocale;
 
 // @public (undocumented)
-export interface LogicalExpression extends Node {
+export interface LogicalExpression extends Node_2 {
     // (undocumented)
     left: Expression;
     // (undocumented)
@@ -232,7 +232,7 @@ export interface MemberContext {
 }
 
 // @public (undocumented)
-export interface MemberExpression extends Node {
+export interface MemberExpression extends Node_2 {
     // (undocumented)
     object: Expression;
     // (undocumented)
@@ -244,19 +244,21 @@ export interface MemberExpression extends Node {
 }
 
 // @public (undocumented)
-export interface Node {
+interface Node_2 {
     // (undocumented)
     range: [number, number];
 }
 
+export { Node_2 as Node }
+
 // @public (undocumented)
-export interface NullLiteral extends Node {
+export interface NullLiteral extends Node_2 {
     // (undocumented)
     type: 'NullLiteral';
 }
 
 // @public (undocumented)
-export interface NumericLiteral extends Node {
+export interface NumericLiteral extends Node_2 {
     // (undocumented)
     type: 'NumericLiteral';
     // (undocumented)
@@ -264,7 +266,7 @@ export interface NumericLiteral extends Node {
 }
 
 // @public (undocumented)
-export interface ObjectExpression extends Node {
+export interface ObjectExpression extends Node_2 {
     // (undocumented)
     properties: (Property | SpreadElement)[];
     // (undocumented)
@@ -284,7 +286,7 @@ export const postfixUnaryOperators: string[];
 export function printExpression(expression: Expression): string;
 
 // @public (undocumented)
-export interface Property extends Node {
+export interface Property extends Node_2 {
     // (undocumented)
     key: NumericLiteral | StringLiteral | Identifier;
     // (undocumented)
@@ -296,7 +298,7 @@ export interface Property extends Node {
 }
 
 // @public (undocumented)
-export interface PunctuatorToken extends Node {
+export interface PunctuatorToken extends Node_2 {
     // (undocumented)
     type: 'PunctuatorToken';
     // (undocumented)
@@ -307,7 +309,7 @@ export interface PunctuatorToken extends Node {
 export function replaceLocaleParameters(locale: string, ...parameters: (number | string)[]): string;
 
 // @public (undocumented)
-export interface RestElement extends Node {
+export interface RestElement extends Node_2 {
     // (undocumented)
     argument: Identifier;
     // (undocumented)
@@ -315,7 +317,7 @@ export interface RestElement extends Node {
 }
 
 // @public (undocumented)
-export interface SpreadElement extends Node {
+export interface SpreadElement extends Node_2 {
     // (undocumented)
     argument: Expression;
     // (undocumented)
@@ -323,7 +325,7 @@ export interface SpreadElement extends Node {
 }
 
 // @public (undocumented)
-export interface StringLiteral extends Node {
+export interface StringLiteral extends Node_2 {
     // (undocumented)
     type: 'StringLiteral';
     // (undocumented)
@@ -331,7 +333,7 @@ export interface StringLiteral extends Node {
 }
 
 // @public (undocumented)
-export interface ThisExpression extends Node {
+export interface ThisExpression extends Node_2 {
     // (undocumented)
     type: 'ThisExpression';
 }
@@ -343,7 +345,7 @@ export type Token = BooleanLiteral | EOFToken | Identifier | KeywordToken | Nume
 export function tokenizeExpression(expression: string): Token[];
 
 // @public (undocumented)
-export interface UnaryExpression extends Node {
+export interface UnaryExpression extends Node_2 {
     // (undocumented)
     argument: Expression;
     // (undocumented)
