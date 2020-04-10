@@ -9,13 +9,11 @@ test(title, (t) => {
     constructor(value) {
       this.value = value
     }
-    parent
   }
   class B {
     constructor(value) {
       this.value = value
     }
-    child
   }
   const a = new A(1)
   const b = new B(2)
