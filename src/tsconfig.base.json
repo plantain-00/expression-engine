@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "target": "es5",
-    "declaration": true,
-    "outDir": "../dist",
-    "module": "commonjs"
-  }
-}
