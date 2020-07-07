@@ -74,6 +74,6 @@
     ]
   },
   "dependencies": {
-    "tslib": "2"
+    "tslib": "1 || 2"
   }
 }
