@@ -49,7 +49,10 @@ const properties = [
   'id',
   'generator',
   'async',
-  'errors'
+  'errors',
+  'leadingComments',
+  'trailingComments',
+  'innerComments'
 ]
 
 function transformAst (expression: { [key: string]: any }) {
