@@ -112,6 +112,10 @@ function evalutate(
     if (expression.optional && !object) {
       return undefined
     }
+    if (!['length', 'name', 'toString', 'valueOf', 'toLocaleString'].includes(property)
+      && (property in Object.prototype || property in Function.prototype)) {
+      throw new Error(`No access to property "${property}"`)
+    }
     const value = object[property]
     return typeof value === 'function' ? value.bind(object) : value
   }
