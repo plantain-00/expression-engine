@@ -58,7 +58,7 @@ const properties = [
 function transformAst (expression: { [key: string]: any }) {
   const result: { [key: string]: unknown } = {}
   for (const key in expression) {
-    if (!properties.includes(key)) {
+    if (!properties.includes(key) && !key.startsWith('__')) {
       let value = expression[key]
       if (value === 'ObjectProperty') {
         value = 'Property'
