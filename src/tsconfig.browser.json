@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "../dist/browser",
     "declaration": true,
+    "noUncheckedIndexedAccess": false,
     "target": "es5"
   }
 }
