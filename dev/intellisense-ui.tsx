@@ -35,8 +35,8 @@ class Main extends React.Component<{}, {}> {
         }}
         select={value => {
           this.setState({ value })
-        }}>
-      </AutoComplete>
+        }}
+      />
     )
   }
 }
