@@ -10,7 +10,7 @@ export default {
       ],
       front: [
         'tsc -p src/tsconfig.browser.json',
-        'rollup --config rollup.config.js',
+        'rollup --config rollup.config.mjs',
         [
           `pegjs -o dist/expression-parser.peg.js --optimize size --format umd src/expression.pegjs`,
           'uglifyjs dist/expression-parser.peg.js -o dist/expression-parser.peg.min.js'
