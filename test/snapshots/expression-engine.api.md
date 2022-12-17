@@ -205,6 +205,8 @@ export interface MemberExpression extends Node_2 {
 // @public (undocumented)
 interface Node_2 {
     // (undocumented)
+    parenthesesRange?: [number, number];
+    // (undocumented)
     range: [number, number];
 }
 export { Node_2 as Node }

@@ -31,6 +31,7 @@ export interface KeywordToken extends Node {
  */
 export interface Node {
   range: [number, number]
+  parenthesesRange?: [number, number]
 }
 
 /**

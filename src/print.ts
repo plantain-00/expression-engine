@@ -44,7 +44,7 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
     return `(${params}) => ${body}`
   }
   if (expression.type === 'UnaryExpression') {
-    const argument = print(expression.argument)
+    const argument = print(expression.argument, -1)
     if (postfixUnaryOperators.includes(expression.operator)) {
       return argument + expression.operator
     }

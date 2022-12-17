@@ -36,7 +36,7 @@ class Parser {
   }
   private locale: Locale
 
-  parseExpression(tokens: (Token | Expression)[], range: [number, number]): Expression {
+  parseExpression(tokens: (Token | Expression)[], range: [number, number], parenthesesRange?: [number, number]): Expression {
     if (tokens.length === 0) {
       throw new Error(this.locale.emptyExpression)
     }
@@ -46,7 +46,7 @@ class Parser {
     }
 
     if (tokens.length === 2) {
-      return this.parseUnaryExpression(tokens, range)
+      return this.parseUnaryExpression(tokens, parenthesesRange ?? range)
     }
 
     const firstToken = tokens[0]
@@ -73,7 +73,7 @@ class Parser {
           } as ArrowFunctionExpression
         }
         if (priorizedBinaryOperators.some((p) => p.some((c) => c === operator.value))) {
-          return this.parseBinaryExpression(left, operator, right, range)
+          return this.parseBinaryExpression(left, operator, right, range, parenthesesRange)
         }
       } else if (right.type === 'PunctuatorToken' && postfixUnaryOperators.includes(right.value)) {
         const expression = this.parseExpression([operator, right], [operator.range[0], range[1]])
@@ -247,11 +247,12 @@ class Parser {
         }
         const newToken = tokens.slice(i + 1, index)
         i = index
+        const parenthesesRange = [token.range[0], tokens[index].range[1]] as [number, number]
         if (getFunctionArrowIndex(index, tokens) !== -1) {
-          newTokens.push(this.parseFunctionParameters(newToken, [token.range[0], tokens[index].range[1]]))
+          newTokens.push(this.parseFunctionParameters(newToken, parenthesesRange))
           continue
         }
-        newTokens.push(this.parseExpression(newToken, getTokensRange(newToken)))
+        newTokens.push(this.parseExpression(newToken, getTokensRange(newToken), parenthesesRange))
       } else {
         newTokens.push(token)
       }
@@ -340,23 +341,30 @@ class Parser {
     return newTokens
   }
 
-  private parseBinaryExpression(left: Token | Expression, operator: PunctuatorToken, right: Token | Expression, range: [number, number]): LogicalExpression | BinaryExpression {
+  private parseBinaryExpression(left: Token | Expression, operator: PunctuatorToken, right: Token | Expression, range: [number, number], parenthesesRange?: [number, number]): LogicalExpression | BinaryExpression {
+    let result: LogicalExpression | BinaryExpression
     if (operator.value === '&&' || operator.value === '||' || operator.value === '??') {
-      return {
+      result = {
         type: 'LogicalExpression',
         left: this.parseTokenOrExpression(left),
         operator: operator.value,
         right: this.parseTokenOrExpression(right),
         range
       }
+      return result
+    } else {
+      result = {
+        type: 'BinaryExpression',
+        left: this.parseTokenOrExpression(left),
+        operator: operator.value as BinaryOperator,
+        right: this.parseTokenOrExpression(right),
+        range
+      }
     }
-    return {
-      type: 'BinaryExpression',
-      left: this.parseTokenOrExpression(left),
-      operator: operator.value as BinaryOperator,
-      right: this.parseTokenOrExpression(right),
-      range
+    if (parenthesesRange) {
+      result.parenthesesRange = parenthesesRange
     }
+    return result
   }
 
   private parseLiteral(token: Token | Expression): Expression {
@@ -517,11 +525,18 @@ class Parser {
       }
     }
     if (operator.type === 'PunctuatorToken' && prefixUnaryOperators.includes(operator.value) && !isToken(token)) {
+      if (token.parenthesesRange) {
+        range = [
+          Math.min(range[0], token.parenthesesRange[0]),
+          Math.max(range[1], token.parenthesesRange[1]),
+        ]
+        delete token.parenthesesRange
+      }
       return {
         type: 'UnaryExpression',
         operator: operator.value as UnaryOperator,
         argument: token,
-        range
+        range,
       }
     }
     if (token.type === 'PunctuatorToken' && postfixUnaryOperators.includes(token.value) && !isToken(operator)) {

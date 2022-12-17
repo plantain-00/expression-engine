@@ -8,7 +8,7 @@ export function testParser (expression: string, t: Assertions, options?: { conte
 
   const thisStartMoment = process.hrtime.bigint()
   const tokens = tokenizeExpression(expression)
-  const ast = parseExpression(tokens)
+  const ast = transformAst(parseExpression(tokens))
   const thisTime = process.hrtime.bigint() - thisStartMoment
 
   if (!options.disableBabel) {
@@ -26,7 +26,7 @@ export function testParser (expression: string, t: Assertions, options?: { conte
   }
   
   if (!options.disablePegjs) {
-    const pegJsAst = pegJsParse(expression)
+    const pegJsAst = transformAst(pegJsParse(expression))
     t.deepEqual(ast, pegJsAst)
   }
 
@@ -45,6 +45,7 @@ const properties = [
   'extra',
   'prefix',
   'computed',
+  'parenthesesRange',
   'method',
   'id',
   'generator',
