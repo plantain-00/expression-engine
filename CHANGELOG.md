@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.9.1](https://github.com/plantain-00/expression-engine/compare/v1.9.0...v1.9.1) (2022-12-17)
+  
+* fix: print and parse ([1dd7e4a](https://github.com/plantain-00/expression-engine/commit/1dd7e4a6755f1b4facf83a42e64001f0be024572))
+
 ## [1.9.0](https://github.com/plantain-00/expression-engine/compare/v1.8.2...v1.9.0) (2022-12-17)
   
 * feat: improve printExpression ([8b70f3a](https://github.com/plantain-00/expression-engine/commit/8b70f3aa38348c5659a106daae45b00753ba653d))
