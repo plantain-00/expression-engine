@@ -2,9 +2,7 @@ import test from 'ava'
 
 import { testParser } from './utils'
 
-const title = 'point 2'
-
-test(title, (t) => {
+test('point 2', (t) => {
   const { tokens, ast, result, printResult } = testParser(`a[0].b`, t, {
     context: {
       a: [
@@ -14,5 +12,5 @@ test(title, (t) => {
       ]
     }
   })
-  t.snapshot({ tokens, ast, result, printResult }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult })
 })

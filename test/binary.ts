@@ -13,10 +13,8 @@ const expressions = [
   'x * y / z'
 ]
 for (const expression of expressions) {
-  const title = `binary: ${expression}`
-
-  test(title, (t) => {
+  test(`binary: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

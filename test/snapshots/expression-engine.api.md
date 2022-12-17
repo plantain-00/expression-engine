@@ -154,19 +154,7 @@ export interface FunctionParamsExpression extends Node_2 {
 }
 
 // @public (undocumented)
-export function getIntellisenseContext(expression: string, cursorPosition: number): IntellisenseContext;
-
-// @public (undocumented)
-export function getIntellisenseOptions(context: IntellisenseContext, schema: IntellisenseSchema): IntellisenseOption[];
-
-// @public (undocumented)
 export function getLocale(locale: null | undefined | Locale): Locale;
-
-// @public (undocumented)
-export interface GlobalContext {
-    // (undocumented)
-    type: 'global';
-}
 
 // @public (undocumented)
 export interface Identifier extends Node_2 {
@@ -174,29 +162,6 @@ export interface Identifier extends Node_2 {
     name: string;
     // (undocumented)
     type: 'Identifier';
-}
-
-// @public (undocumented)
-export type IntellisenseContext = StringLiteral | GlobalContext | MemberContext | UnknownContext;
-
-// @public (undocumented)
-export interface IntellisenseOption extends IntellisenseStringEnum {
-    // (undocumented)
-    range: [number, number];
-}
-
-// @public (undocumented)
-export interface IntellisenseSchema {
-    // (undocumented)
-    stringEnums?: IntellisenseStringEnum[];
-}
-
-// @public (undocumented)
-export interface IntellisenseStringEnum {
-    // (undocumented)
-    description?: string;
-    // (undocumented)
-    name: string;
 }
 
 // @public (undocumented)
@@ -226,12 +191,6 @@ export interface LogicalExpression extends Node_2 {
 export type LogicalOperator = '||' | '&&' | '??';
 
 // @public (undocumented)
-export interface MemberContext {
-    // (undocumented)
-    type: 'member';
-}
-
-// @public (undocumented)
 export interface MemberExpression extends Node_2 {
     // (undocumented)
     object: Expression;
@@ -248,7 +207,6 @@ interface Node_2 {
     // (undocumented)
     range: [number, number];
 }
-
 export { Node_2 as Node }
 
 // @public (undocumented)
@@ -284,6 +242,9 @@ export const postfixUnaryOperators: string[];
 
 // @public (undocumented)
 export function printExpression(expression: Expression): string;
+
+// @public (undocumented)
+export const priorizedBinaryOperators: string[][];
 
 // @public (undocumented)
 export interface Property extends Node_2 {
@@ -356,13 +317,6 @@ export interface UnaryExpression extends Node_2 {
 
 // @public (undocumented)
 export type UnaryOperator = '+' | '-' | '!' | '~' | '%' | 'await';
-
-// @public (undocumented)
-export interface UnknownContext {
-    // (undocumented)
-    type: 'unknown';
-}
-
 
 // (No @packageDocumentation comment for this package)
 

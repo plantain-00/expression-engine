@@ -2,13 +2,11 @@ import test from 'ava'
 
 import { testParser } from './utils'
 
-const title = 'unary expression not'
-
-test(title, (t) => {
+test('unary expression not', (t) => {
   const { tokens, ast, result, printResult } = testParser(`!a`, t, {
     context: {
       a: true
     }
   })
-  t.snapshot({ tokens, ast, result, printResult }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult })
 })

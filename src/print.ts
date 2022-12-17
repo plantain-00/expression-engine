@@ -1,13 +1,13 @@
-import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, postfixUnaryOperators } from '.'
+import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, postfixUnaryOperators, priorizedBinaryOperators } from '.'
 
 /**
  * @public
  */
 export function printExpression(expression: Expression): string {
-  return print(expression, true)
+  return print(expression)
 }
 
-function print(expression: Expression | SpreadElement | AssignmentPattern | RestElement | Property, isRoot = false): string {
+function print(expression: Expression | SpreadElement | AssignmentPattern | RestElement | Property, priority = Number.MAX_SAFE_INTEGER): string {
   if (expression.type === 'NumericLiteral') {
     return expression.value.toString()
   }
@@ -54,10 +54,12 @@ function print(expression: Expression | SpreadElement | AssignmentPattern | Rest
     return expression.operator + argument
   }
   if (expression.type === 'BinaryExpression' || expression.type === 'LogicalExpression') {
-    if (isRoot) {
-      return print(expression.left) + ' ' + expression.operator + ' ' + print(expression.right)
+    const index = priorizedBinaryOperators.findIndex(p => p.includes(expression.operator))
+    const result = print(expression.left, index) + ' ' + expression.operator + ' ' + print(expression.right, index)
+    if (index <= priority) {
+      return result
     }
-    return '(' + print(expression.left) + ' ' + expression.operator + ' ' + print(expression.right) + ')'
+    return `(${result})`
   }
   if (expression.type === 'MemberExpression') {
     const object = print(expression.object)

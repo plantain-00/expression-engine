@@ -2,8 +2,8 @@ import { parseExpression as babelParseExpression } from '@babel/parser'
 
 import { parseExpression, tokenizeExpression, evaluateExpression, printExpression } from '../src'
 
-const expression = `123_456`
-let babelStartMoment = process.hrtime.bigint()
+const expression = `1 + (2 + 3) * 4`
+const babelStartMoment = process.hrtime.bigint()
 const acronResult = babelParseExpression(expression, { ranges: true })
 const babelTime = process.hrtime.bigint() - babelStartMoment
 console.info(JSON.stringify(acronResult, null, 2))

@@ -10,10 +10,8 @@ const expressions = [
   'x < y < z'
 ]
 for (const expression of expressions) {
-  const title = `relational: ${expression}`
-
-  test(title, (t) => {
+  test(`relational: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

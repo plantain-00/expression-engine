@@ -9,10 +9,8 @@ const expressions = [
   'x!==y'
 ]
 for (const expression of expressions) {
-  const title = `equality: ${expression}`
-
-  test(title, (t) => {
+  test(`equality: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

@@ -7,10 +7,8 @@ const expressions = [
   'a + (b < (c * d)) + e'
 ]
 for (const expression of expressions) {
-  const title = `complex: ${expression}`
-
-  test(title, (t) => {
+  test(`complex: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

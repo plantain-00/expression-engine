@@ -2,9 +2,7 @@ import test from 'ava'
 
 import { testParser } from './utils'
 
-const title = 'class'
-
-test(title, (t) => {
+test('class', (t) => {
   class A {
     constructor(public value: number) {
     }
@@ -24,5 +22,5 @@ test(title, (t) => {
       a: a
     }
   })
-  t.snapshot({ tokens, ast, result, printResult }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult })
 })

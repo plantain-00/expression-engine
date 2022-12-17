@@ -8,10 +8,8 @@ const expressions = [
   'x == (0) ? 1 : 2'
 ]
 for (const expression of expressions) {
-  const title = `condition: ${expression}`
-
-  test(title, (t) => {
+  test(`condition: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

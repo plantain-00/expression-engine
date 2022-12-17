@@ -647,7 +647,7 @@ function getFunctionArrowIndex(index: number, tokens: (Token | Expression)[]) {
   return -1
 }
 
-const priorizedBinaryOperators = [
+export const priorizedBinaryOperators = [
   ['**'],
   ['*', '/', '%'],
   ['+', '-'],

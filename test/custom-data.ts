@@ -2,8 +2,6 @@ import test from 'ava'
 
 import { tokenizeExpression, parseExpression, evaluateExpression } from '../src'
 
-const title = 'custom data'
-
 class HighlightText {
   constructor(public text: string, public highlight: number[] = []) {
   }
@@ -46,7 +44,7 @@ class HighlightText {
   }
 }
 
-test(title, (t) => {
+test('custom data', (t) => {
   const ast1 = parseExpression(tokenizeExpression('a + b'))
   const result1 = evaluateExpression(
     ast1,
@@ -124,5 +122,5 @@ test(title, (t) => {
     undefined,
     [HighlightText]
   )
-  t.snapshot({ result1, result2, result3, result4, result5, result6, result7, result8 }, { id: title })
+  t.snapshot({ result1, result2, result3, result4, result5, result6, result7, result8 })
 })

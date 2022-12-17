@@ -7,10 +7,8 @@ const expressions = [
   '4 + 5 * (6)'
 ]
 for (const expression of expressions) {
-  const title = `grouping: ${expression}`
-
-  test(title, (t) => {
+  test(`grouping: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

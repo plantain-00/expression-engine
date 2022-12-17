@@ -2,9 +2,7 @@ import test from 'ava'
 
 import { testParser } from './utils'
 
-const title = 'binary pipeline operator'
-
-test(title, (t) => {
+test('binary pipeline operator', (t) => {
   const { tokens, ast, result, printResult } = testParser(`a |> double |> (_ => add(7, _))`, t, {
     disableBabel: true,
     context: {
@@ -13,5 +11,5 @@ test(title, (t) => {
       add: (x: number, y: number) => x + y
     }
   })
-  t.snapshot({ tokens, ast, result, printResult }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult })
 })

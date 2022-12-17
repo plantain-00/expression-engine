@@ -2,9 +2,7 @@ import test from 'ava'
 
 import { testParser } from './utils'
 
-const title = 'member expression and call expression 2'
-
-test(title, (t) => {
+test('member expression and call expression 2', (t) => {
   const { tokens, ast, result, printResult } = testParser(`a.b()[0]`, t, {
     context: {
       a: {
@@ -13,5 +11,5 @@ test(title, (t) => {
     },
     disablePegjs: true // todo
   })
-  t.snapshot({ tokens, ast, result, printResult }, { id: title })
+  t.snapshot({ tokens, ast, result, printResult })
 })

@@ -7,12 +7,10 @@ const expressions = [
   '-1+2',
 ]
 for (const expression of expressions) {
-  const title = `prefix unary: ${expression}`
-
-  test(title, (t) => {
+  test(`prefix unary: ${expression}`, (t) => {
     const { tokens, ast, result, printResult } = testParser(expression, t, {
       context: {}
     })
-    t.snapshot({ tokens, ast, result, printResult }, { id: title })
+    t.snapshot({ tokens, ast, result, printResult })
   })
 }

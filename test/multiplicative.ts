@@ -4,10 +4,8 @@ import { testParser } from './utils'
 
 const expressions = ['x * y', 'x / y', '+ 42']
 for (const expression of expressions) {
-  const title = `multiplicative: ${expression}`
-
-  test(title, (t) => {
+  test(`multiplicative: ${expression}`, (t) => {
     const { tokens, ast, printResult } = testParser(expression, t)
-    t.snapshot({ tokens, ast, printResult }, { id: title })
+    t.snapshot({ tokens, ast, printResult })
   })
 }

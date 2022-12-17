@@ -114,18 +114,3 @@ const result = evaluateExpression(
 )
 // HighlightText { text: 'aaabbb', highlight: [ 1, 1, 2, 1 ] }
 ```
-
-## intellisense
-
-+ string literal
-
-### todo
-
-+ get more context
-+ auto complete and show document(string enum, true, false, null, functions, objects, members, parameters, (), [], {}, operators)
-+ show message of selected token by onselectionchange event(operators)
-+ show error on the errored position
-+ custom auto complete(eg, fontfamily)
-+ auto complete ui components?
-+ generate schema from function and object type definitions?
-+ array, number, string, boolean's properties and methods(generated from ts lib declaration?)

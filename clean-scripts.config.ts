@@ -15,8 +15,6 @@ export default {
           `pegjs -o dist/expression-parser.peg.js --optimize size --format umd src/expression.pegjs`,
           'uglifyjs dist/expression-parser.peg.js -o dist/expression-parser.peg.min.js'
         ],
-        'tsc -p dev/tsconfig.json',
-        'webpack --config dev/webpack.config.js'
       ]
     }
   ],
