@@ -1,4 +1,4 @@
-import { Expression, UnaryExpression, LogicalExpression, BinaryExpression, Locale, getLocale, replaceLocaleParameters, SpreadElement, AssignmentPattern, RestElement, Property } from '.'
+import { Expression, UnaryExpression, LogicalExpression, BinaryExpression, Locale, getLocale, replaceLocaleParameters, SpreadElement, AssignmentPattern, RestElement, Property, ExpressionError } from '.'
 
 /**
  * @public
@@ -44,7 +44,7 @@ class Evaluator implements EvaluatorProtocol {
     if (expression.operator === '??') {
       return left !== null && left !== undefined ? left : this.evalutate(expression.right, context, true)
     }
-    throw new Error(this.locale.unexpectToken)
+    throw new ExpressionError(this.locale.unexpectToken, expression.range)
   }
 
   evaluateUnaryExpression(expression: UnaryExpression, context: { [name: string]: unknown }): unknown {
@@ -80,7 +80,7 @@ class AsyncEvaluator implements EvaluatorProtocol {
     if (expression.operator === '??') {
       return left !== null && left !== undefined ? left : this.evalutate(expression.right, context, true)
     }
-    throw new Error(this.locale.unexpectToken)
+    throw new ExpressionError(this.locale.unexpectToken, expression.range)
   }
 
   async evaluateUnaryExpression(expression: UnaryExpression, context: { [name: string]: unknown }): Promise<unknown> {
@@ -114,7 +114,7 @@ function evalutate(
     }
     if (!['length', 'name', 'toString', 'valueOf', 'toLocaleString'].includes(property)
       && (property in Object.prototype || property in Function.prototype)) {
-      throw new Error(`No access to property "${property}"`)
+      throw new ExpressionError(`No access to property "${property}"`, expression.property.range)
     }
     const value = object[property]
     return typeof value === 'function' ? value.bind(object) : value
@@ -211,7 +211,7 @@ function evalutate(
       return protocol.evalutate(expression.body, newContext, true)
     }
   }
-  throw new Error(protocol.locale.unexpectToken)
+  throw new ExpressionError(protocol.locale.unexpectToken, expression.range)
 }
 
 function evaluateBinaryExpression(
@@ -305,13 +305,13 @@ function evaluateBinaryExpression(
       return left + right
     }
     if (typeof left !== 'number' || isNaN(left)) {
-      throw new Error(replaceLocaleParameters(locale.expect, 'Number', expression.left.range[0]))
+      throw new ExpressionError(replaceLocaleParameters(locale.expect, 'Number', expression.left.range[0]), expression.left.range)
     }
     if (typeof right === 'string') {
       return left + right
     }
     if (typeof right !== 'number' || isNaN(right)) {
-      throw new Error(replaceLocaleParameters(locale.expect, 'Number', expression.right.range[0]))
+      throw new ExpressionError(replaceLocaleParameters(locale.expect, 'Number', expression.right.range[0]), expression.right.range)
     }
     return left + right
   }
@@ -324,10 +324,10 @@ function evaluateBinaryExpression(
   }
 
   if (typeof left !== 'number') {
-    throw new Error(replaceLocaleParameters(locale.expect, 'Number', expression.left.range[0]))
+    throw new ExpressionError(replaceLocaleParameters(locale.expect, 'Number', expression.left.range[0]), expression.left.range)
   }
   if (typeof right !== 'number') {
-    throw new Error(replaceLocaleParameters(locale.expect, 'Number', expression.right.range[0]))
+    throw new ExpressionError(replaceLocaleParameters(locale.expect, 'Number', expression.right.range[0]), expression.right.range)
   }
   if (expression.operator === '-') {
     return left - right
@@ -375,7 +375,7 @@ function evaluateBinaryExpression(
     return left | right
   }
 
-  throw new Error(locale.unexpectToken)
+  throw new ExpressionError(locale.unexpectToken, expression.range)
 }
 
 function evaluateUnaryExpression(
@@ -390,7 +390,7 @@ function evaluateUnaryExpression(
     return +value
   }
   if (typeof value !== 'number' || isNaN(value)) {
-    throw new Error(replaceLocaleParameters(locale.expect, 'Number', expression.argument.range[0]))
+    throw new ExpressionError(replaceLocaleParameters(locale.expect, 'Number', expression.argument.range[0]), expression.argument.range)
   }
   if (expression.operator === '-') {
     return -value
@@ -404,7 +404,7 @@ function evaluateUnaryExpression(
   if (expression.operator === 'await') {
     return value
   }
-  throw new Error(locale.unexpectToken)
+  throw new ExpressionError(locale.unexpectToken, expression.range)
 }
 
 /**

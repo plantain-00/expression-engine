@@ -146,6 +146,13 @@ export function evaluateExpression(expression: Expression, context: {
 export type Expression = BinaryExpression | MemberExpression | Identifier | NumericLiteral | StringLiteral | ConditionalExpression | CallExpression | LogicalExpression | UnaryExpression | ThisExpression | BooleanLiteral | ArrayExpression | ObjectExpression | NullLiteral | ArrowFunctionExpression | FunctionParamsExpression;
 
 // @public (undocumented)
+export class ExpressionError extends Error {
+    constructor(message: string, range: [number, number]);
+    // (undocumented)
+    range: [number, number];
+}
+
+// @public (undocumented)
 export interface FunctionParamsExpression extends Node_2 {
     // (undocumented)
     params: Pattern[];

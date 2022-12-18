@@ -20,7 +20,8 @@ import {
   ArrowFunctionExpression,
   FunctionParamsExpression,
   Pattern,
-  CallExpression
+  CallExpression,
+  ExpressionError
 } from '.'
 
 /**
@@ -38,7 +39,7 @@ class Parser {
 
   parseExpression(tokens: (Token | Expression)[], range: [number, number], parenthesesRange?: [number, number]): Expression {
     if (tokens.length === 0) {
-      throw new Error(this.locale.emptyExpression)
+      throw new ExpressionError(this.locale.emptyExpression, [0, 0])
     }
 
     if (tokens.length === 1) {
@@ -141,7 +142,7 @@ class Parser {
       } as ArrowFunctionExpression
     }
 
-    throw new Error(replaceLocaleParameters(this.locale.unexpectToken, range[0], range[1]))
+    throw new ExpressionError(replaceLocaleParameters(this.locale.unexpectToken, range[0], range[1]), range)
   }
 
   private parseObjectLiteral(tokens: (Token | Expression)[], range: [number, number]): ObjectExpression {
@@ -200,7 +201,7 @@ class Parser {
     }
     const key = this.parseExpression(keyTokens, getTokensRange(keyTokens))
     if (key.type !== 'Identifier' && key.type !== 'StringLiteral' && key.type !== 'NumericLiteral') {
-      throw new Error(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]))
+      throw new ExpressionError(replaceLocaleParameters(this.locale.invalidPropertyName, key.range[0]), key.range)
     }
     if (valueTokens.length === 0) {
       return {
@@ -283,7 +284,7 @@ class Parser {
               continue
             }
           }
-          throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+          throw new ExpressionError(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]), token.range)
         }
         pattern = token
         continue
@@ -308,7 +309,7 @@ class Parser {
           }
         }
       }
-      throw new Error(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]))
+      throw new ExpressionError(replaceLocaleParameters(this.locale.invalidFunctionParameter, token.range[0]), token.range)
     }
     if (pattern) {
       expression.params.push(pattern)
@@ -377,7 +378,7 @@ class Parser {
     if (!isToken(token)) {
       return token
     }
-    throw new Error(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]))
+    throw new ExpressionError(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]), token.range)
   }
 
   private getPrefixUnaryOperatorIndex(tokens: (Token | Expression)[]) {
@@ -417,7 +418,7 @@ class Parser {
           continue
         }
         if (expectCall && token.value !== '[' && token.value !== '(') {
-          throw new Error(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]))
+          throw new ExpressionError(replaceLocaleParameters(this.locale.unexpectToken, token.range[0], token.range[1]), token.range)
         }
         if (callOperators.includes(token.value)) {
           const object = newTokens.pop()!
@@ -547,7 +548,7 @@ class Parser {
         range
       }
     }
-    throw new Error(replaceLocaleParameters(this.locale.expectUnaryOperator, range[0]))
+    throw new ExpressionError(replaceLocaleParameters(this.locale.expectUnaryOperator, range[0]), range)
   }
 
   private hasPreviousExpression(tokens: (Token | Expression)[], i: number) {
@@ -617,7 +618,7 @@ class Parser {
         range
       }
     }
-    throw new Error(replaceLocaleParameters(this.locale.expectConditionalOperator, operator1.range[0], operator2.range[0]))
+    throw new ExpressionError(replaceLocaleParameters(this.locale.expectConditionalOperator, operator1.range[0], operator2.range[0]), [operator1.range[0], operator2.range[0]])
   }
 
   private parseTokenOrExpression(token: Token | Expression) {
@@ -640,7 +641,7 @@ class Parser {
         }
       }
     }
-    throw new Error(replaceLocaleParameters(this.locale.expect, endMark, start))
+    throw new ExpressionError(replaceLocaleParameters(this.locale.expect, endMark, start), [start, tokens.length])
   }
 }
 

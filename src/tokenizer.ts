@@ -1,4 +1,4 @@
-import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral, Locale, getLocale, replaceLocaleParameters, NullLiteral } from '.'
+import { Token, PunctuatorToken, BooleanLiteral, Identifier, KeywordToken, NumericLiteral, StringLiteral, Locale, getLocale, replaceLocaleParameters, NullLiteral, ExpressionError } from '.'
 
 /**
  * @public
@@ -200,7 +200,7 @@ class Tokenizer {
       const c = this.source[i]
       if (c === '.') {
         if (hasDecimalPoint) {
-          throw new Error(replaceLocaleParameters(this.locale.multipleDecimalPoint, i))
+          throw new ExpressionError(replaceLocaleParameters(this.locale.multipleDecimalPoint, i), [i, i + 1])
         }
         hasDecimalPoint = true
       } else if (letterRange(c)) {
@@ -256,7 +256,7 @@ class Tokenizer {
     this.index++
     const index = this.findEndOfString(c)
     if (index === undefined) {
-      throw new Error(replaceLocaleParameters(this.locale.expect, c, startIndex))
+      throw new ExpressionError(replaceLocaleParameters(this.locale.expect, c, startIndex), [startIndex, this.source.length])
     }
     const token = this.source.substring(this.index, index)
     this.index = index + 1
