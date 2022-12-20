@@ -10,7 +10,8 @@ const expressions = [
   'x + y * z',
   'x + y / z',
   'x * y * z',
-  'x * y / z'
+  'x * y / z',
+  'x - (y + z)',
 ]
 for (const expression of expressions) {
   test(`binary: ${expression}`, (t) => {

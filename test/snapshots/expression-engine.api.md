@@ -250,7 +250,9 @@ export type Pattern = Identifier | AssignmentPattern | RestElement;
 export const postfixUnaryOperators: string[];
 
 // @public (undocumented)
-export function printExpression(expression: Expression): string;
+export function printExpression(expression: Expression, options?: Partial<{
+    keepBinaryExpressionOrder: boolean;
+}>): string;
 
 // @public (undocumented)
 export const priorizedBinaryOperators: string[][];
