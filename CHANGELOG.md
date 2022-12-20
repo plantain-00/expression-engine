@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.10.2](https://github.com/plantain-00/expression-engine/compare/v1.10.1...v1.10.2) (2022-12-20)
+  
+* fix: print ([7deb73c](https://github.com/plantain-00/expression-engine/commit/7deb73c263de0d8fab6f7581fae7d0c4f1ae1bca))
+
 ## [1.10.1](https://github.com/plantain-00/expression-engine/compare/v1.10.0...v1.10.1) (2022-12-20)
   
 * fix: print ([3260281](https://github.com/plantain-00/expression-engine/commit/32602810db19f86d893c5413073c295e26d19af1))
