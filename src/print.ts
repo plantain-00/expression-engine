@@ -56,10 +56,10 @@ export function printExpression(expression: Expression, options?: Partial<{
       const index = priorizedBinaryOperators.findIndex(p => p.includes(expression.operator))
       const rightIndex = expression.operator === '+' || expression.operator === '*' ? index : index - 0.1
       const result = print(expression.left, index) + ' ' + expression.operator + ' ' + print(expression.right, rightIndex)
-      if (!options?.keepBinaryExpressionOrder && index <= priority) {
-        return result
+      if (index > priority || (index === priority && options?.keepBinaryExpressionOrder)) {
+        return `(${result})`
       }
-      return `(${result})`
+      return result
     }
     if (expression.type === 'MemberExpression') {
       const object = print(expression.object)
