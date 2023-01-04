@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.11.0](https://github.com/plantain-00/expression-engine/compare/v1.10.2...v1.11.0) (2023-01-04)
+  
+* feat: add type Expression2 ([bc70704](https://github.com/plantain-00/expression-engine/commit/bc707042f067d8ba9fd8068a6529fbfabed10956))
+* chore: update dependencies ([27591d1](https://github.com/plantain-00/expression-engine/commit/27591d1f875c4dae622f4e38f667957425d537ce))
+
 ## [1.10.2](https://github.com/plantain-00/expression-engine/compare/v1.10.1...v1.10.2) (2022-12-20)
   
 * fix: print ([7deb73c](https://github.com/plantain-00/expression-engine/commit/7deb73c263de0d8fab6f7581fae7d0c4f1ae1bca))
