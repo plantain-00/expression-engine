@@ -1,12 +1,12 @@
-import { Expression, SpreadElement, AssignmentPattern, RestElement, Property, postfixUnaryOperators, priorizedBinaryOperators } from '.'
+import { Expression2, SpreadElement2, AssignmentPattern2, RestElement2, Property2, postfixUnaryOperators, priorizedBinaryOperators } from '.'
 
 /**
  * @public
  */
-export function printExpression(expression: Expression, options?: Partial<{
+export function printExpression(expression: Expression2, options?: Partial<{
   keepBinaryExpressionOrder: boolean
 }>): string {
-  const print = (expression: Expression | SpreadElement | AssignmentPattern | RestElement | Property, priority = Number.MAX_SAFE_INTEGER): string => {
+  const print = (expression: Expression2 | SpreadElement2 | AssignmentPattern2 | RestElement2 | Property2, priority = Number.MAX_SAFE_INTEGER): string => {
     if (expression.type === 'NumericLiteral') {
       return expression.value.toString()
     }

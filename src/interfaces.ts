@@ -66,7 +66,33 @@ export type Expression =
 /**
  * @public
  */
-export interface NumericLiteral extends Node {
+export type Expression2 =
+  | BinaryExpression2
+  | MemberExpression2
+  | Identifier2
+  | NumericLiteral2
+  | StringLiteral2
+  | ConditionalExpression2
+  | CallExpression2
+  | LogicalExpression2
+  | UnaryExpression2
+  | ThisExpression2
+  | BooleanLiteral2
+  | ArrayExpression2
+  | ObjectExpression2
+  | NullLiteral2
+  | ArrowFunctionExpression2
+  | FunctionParamsExpression2
+
+/**
+ * @public
+ */
+export type NumericLiteral = Node & NumericLiteral2
+
+/**
+ * @public
+ */
+export interface NumericLiteral2 {
   type: 'NumericLiteral'
   value: number
 }
@@ -74,32 +100,52 @@ export interface NumericLiteral extends Node {
 /**
  * @public
  */
-export interface NullLiteral extends Node {
+export type NullLiteral = Node & NullLiteral2
+
+/**
+ * @public
+ */
+export interface NullLiteral2 {
   type: 'NullLiteral'
 }
 
 /**
  * @public
  */
-export interface ArrayExpression extends Node {
+export type ArrayExpression = Node & ArrayExpression2<Expression | SpreadElement>
+
+/**
+ * @public
+ */
+export interface ArrayExpression2<T = Expression2 | SpreadElement2> {
   type: 'ArrayExpression'
-  elements: (Expression | SpreadElement)[]
+  elements: T[]
 }
 
 /**
  * @public
  */
-export interface ObjectExpression extends Node {
+export type ObjectExpression = Node & ObjectExpression2<Property | SpreadElement>
+
+/**
+ * @public
+ */
+export interface ObjectExpression2<T = Property2 | SpreadElement2> {
   type: 'ObjectExpression'
-  properties: (Property | SpreadElement)[]
+  properties: T[]
 }
 
 /**
  * @public
  */
-export interface Property extends Node {
+export type Property = Node & Property2<NumericLiteral | StringLiteral | Identifier>
+
+/**
+ * @public
+ */
+export interface Property2<T = NumericLiteral2 | StringLiteral2 | Identifier2> {
   type: 'Property'
-  key: NumericLiteral | StringLiteral | Identifier
+  key: T
   value: Expression
   shorthand: boolean
 }
@@ -107,11 +153,16 @@ export interface Property extends Node {
 /**
  * @public
  */
-export interface LogicalExpression extends Node {
+export type LogicalExpression = Node & LogicalExpression2<Expression>
+
+/**
+ * @public
+ */
+export interface LogicalExpression2<T = Expression2> {
   type: 'LogicalExpression'
   operator: LogicalOperator
-  left: Expression
-  right: Expression
+  left: T
+  right: T
 }
 
 /**
@@ -122,35 +173,55 @@ export type LogicalOperator = '||' | '&&' | '??'
 /**
  * @public
  */
-export interface CallExpression extends Node {
+export type CallExpression = Node & CallExpression2<Expression | SpreadElement, Expression>
+
+/**
+ * @public
+ */
+export interface CallExpression2<T = Expression2 | SpreadElement2, T2 = Expression2> {
   type: 'CallExpression'
-  callee: Expression
-  arguments: (Expression | SpreadElement)[]
+  callee: T2
+  arguments: T[]
   optional?: boolean
 }
 
 /**
  * @public
  */
-export interface SpreadElement extends Node {
+export type SpreadElement = Node & SpreadElement2<Expression>
+
+/**
+ * @public
+ */
+export interface SpreadElement2<T = Expression> {
   type: 'SpreadElement'
-  argument: Expression
+  argument: T
 }
 
 /**
  * @public
  */
-export interface ConditionalExpression extends Node {
+export type ConditionalExpression = Node & ConditionalExpression2<Expression>
+
+/**
+ * @public
+ */
+export interface ConditionalExpression2<T = Expression2> {
   type: 'ConditionalExpression'
-  test: Expression
-  consequent: Expression
-  alternate: Expression
+  test: T
+  consequent: T
+  alternate: T
 }
 
 /**
  * @public
  */
-export interface StringLiteral extends Node {
+export type StringLiteral = Node & StringLiteral2
+
+/**
+ * @public
+ */
+export interface StringLiteral2 {
   type: 'StringLiteral'
   value: string
 }
@@ -158,7 +229,12 @@ export interface StringLiteral extends Node {
 /**
  * @public
  */
-export interface BooleanLiteral extends Node {
+export type BooleanLiteral = Node & BooleanLiteral2
+
+/**
+ * @public
+ */
+export interface BooleanLiteral2 {
   type: 'BooleanLiteral'
   value: boolean
 }
@@ -166,7 +242,12 @@ export interface BooleanLiteral extends Node {
 /**
  * @public
  */
-export interface Identifier extends Node {
+export type Identifier = Node & Identifier2
+
+/**
+ * @public
+ */
+export interface Identifier2 {
   type: 'Identifier'
   name: string
 }
@@ -174,27 +255,42 @@ export interface Identifier extends Node {
 /**
  * @public
  */
-export interface ThisExpression extends Node {
+export type ThisExpression = Node & ThisExpression2
+
+/**
+ * @public
+ */
+export interface ThisExpression2 {
   type: 'ThisExpression'
 }
 
 /**
  * @public
  */
-export interface MemberExpression extends Node {
+export type MemberExpression = Node & MemberExpression2<Expression>
+
+/**
+ * @public
+ */
+export interface MemberExpression2<T = Expression2> {
   type: 'MemberExpression'
-  object: Expression
-  property: Expression
+  object: T
+  property: T
   optional?: boolean
 }
 
 /**
  * @public
  */
-export interface UnaryExpression extends Node {
+export type UnaryExpression = Node & UnaryExpression2<Expression>
+
+/**
+ * @public
+ */
+export interface UnaryExpression2<T = Expression2> {
   type: 'UnaryExpression'
   operator: UnaryOperator
-  argument: Expression
+  argument: T
 }
 
 /**
@@ -205,20 +301,30 @@ export type UnaryOperator = '+' | '-' | '!' | '~' | '%' | 'await'
 /**
  * @public
  */
-export interface BinaryExpression extends Node {
+export type BinaryExpression = Node & BinaryExpression2<Expression>
+
+/**
+ * @public
+ */
+export interface BinaryExpression2<T = Expression2> {
   type: 'BinaryExpression'
   operator: BinaryOperator
-  left: Expression
-  right: Expression
+  left: T
+  right: T
 }
 
 /**
  * @public
  */
-export interface ArrowFunctionExpression extends Node {
+export type ArrowFunctionExpression = Node & ArrowFunctionExpression2<Pattern, Expression>
+
+/**
+ * @public
+ */
+export interface ArrowFunctionExpression2<T = Pattern2, T2 = Expression2> {
   type: 'ArrowFunctionExpression'
-  params: Pattern[]
-  body: Expression
+  params: T[]
+  body: T2
 }
 
 /**
@@ -229,26 +335,46 @@ export type Pattern = Identifier | AssignmentPattern | RestElement
 /**
  * @public
  */
-export interface AssignmentPattern extends Node {
+export type Pattern2 = Identifier2 | AssignmentPattern2 | RestElement2
+
+/**
+ * @public
+ */
+export type AssignmentPattern = Node & AssignmentPattern2<Identifier, Expression>
+
+/**
+ * @public
+ */
+export interface AssignmentPattern2<T = Identifier2, T2 = Expression> {
   type: 'AssignmentPattern'
-  left: Identifier
-  right: Expression
+  left: T
+  right: T2
 }
 
 /**
  * @public
  */
-export interface RestElement extends Node {
+export type RestElement = Node & RestElement2<Identifier>
+
+/**
+ * @public
+ */
+export interface RestElement2<T = Identifier2> {
   type: 'RestElement'
-  argument: Identifier
+  argument: T
 }
 
 /**
  * @public
  */
-export interface FunctionParamsExpression extends Node {
+export type FunctionParamsExpression = Node & FunctionParamsExpression2<Pattern>
+
+/**
+ * @public
+ */
+export interface FunctionParamsExpression2<T = Pattern2> {
   type: 'FunctionParamsExpression'
-  params: Pattern[]
+  params: T[]
 }
 
 /**
