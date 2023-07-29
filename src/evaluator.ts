@@ -8,7 +8,7 @@ export function evaluateExpression(
   context: { [name: string]: unknown },
   locale?: Locale,
   // type-coverage:ignore-next-line
-  customData?: Array<{ new(...args: any[]): unknown }> | ((value: unknown) => value is CustomData)
+  customData?: Array<{ new(...args: any[]): unknown }> | ((value: unknown) => value is CustomData) // eslint-disable-line @typescript-eslint/no-explicit-any
 ) {
   const evaluator = isAsync(expression) ? AsyncEvaluator : Evaluator
   const isCustomData = Array.isArray(customData)
