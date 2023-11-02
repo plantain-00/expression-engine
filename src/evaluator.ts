@@ -318,7 +318,22 @@ function evaluateBinaryExpression(
   if (expression.operator === '==' || expression.operator === '===' || expression.operator === '!=' || expression.operator === '!==') {
     return expression.operator === '==' || expression.operator === '===' ? left === right : left !== right
   }
-
+  
+  if (typeof left === 'string' && typeof right === 'string') {
+    if (expression.operator === '>') {
+      return left > right;
+    }
+    if (expression.operator === '>=') {
+      return left >= right
+    }
+    if (expression.operator === '<') {
+      return left < right
+    }
+    if (expression.operator === '<=') {
+      return left <= right
+    }
+  }
+  
   if (expression.operator === '|>') {
     return (right as (arg: unknown) => unknown)(left)
   }
