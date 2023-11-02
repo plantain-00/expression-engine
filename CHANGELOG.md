@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.11.1](https://github.com/plantain-00/expression-engine/compare/v1.11.0...v1.11.1) (2023-11-03)
+  
+* Added support for string inequalities ([3090b79](https://github.com/plantain-00/expression-engine/commit/3090b79c1369d42b7cbcdbaa330646b0057d8d35))
+* chore: update dependencies ([850bcf4](https://github.com/plantain-00/expression-engine/commit/850bcf4f82ff49ae0cc8d403c6dba44261ddd050)) ([98b614e](https://github.com/plantain-00/expression-engine/commit/98b614ebb04c161531a7cf4b9ea17df0ef6e95e0)) ([0f4cbca](https://github.com/plantain-00/expression-engine/commit/0f4cbca6da4b6a81c4ee89e421b4abba4b67c249)) ([9ad4c06](https://github.com/plantain-00/expression-engine/commit/9ad4c06e227405f7e61ec3e6782ef71b9001c8d3)) ([ce435c7](https://github.com/plantain-00/expression-engine/commit/ce435c7c2d3e7ea5a686b5e19c4c796f0a9009d5)) ([78fc281](https://github.com/plantain-00/expression-engine/commit/78fc2814e64a1ce30a6b410951bdb629440095ea)) ([098724b](https://github.com/plantain-00/expression-engine/commit/098724be5841fd7dfd208915a65202b31c9f1ee6)) ([367d3d6](https://github.com/plantain-00/expression-engine/commit/367d3d653e6d834276f09d31640228bb9f60bb1d)) ([a34b0a5](https://github.com/plantain-00/expression-engine/commit/a34b0a576a919ecc468a9c747c6a8762eff071ec)) ([157b393](https://github.com/plantain-00/expression-engine/commit/157b393890a0ca230714c6545aa3d7614fccdc04)) ([073155c](https://github.com/plantain-00/expression-engine/commit/073155c2f88cb4bf3430e025011f5d5e9ea8e1fa))
+* fix: ci ([61df78d](https://github.com/plantain-00/expression-engine/commit/61df78d449192bb20e8ae01c5e7f7e5e2dd88675)) ([d363658](https://github.com/plantain-00/expression-engine/commit/d3636584e59c2438e8ac17fa3e781cc9617e7273))
+
 ## [1.11.0](https://github.com/plantain-00/expression-engine/compare/v1.10.2...v1.11.0) (2023-01-04)
   
 * feat: add type Expression2 ([bc70704](https://github.com/plantain-00/expression-engine/commit/bc707042f067d8ba9fd8068a6529fbfabed10956))
