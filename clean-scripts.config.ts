@@ -19,7 +19,7 @@ export default {
     }
   ],
   lint: {
-    ts: `eslint --ext .js,.ts,.tsx ${tsFiles}`,
+    ts: `eslint ${tsFiles}`,
     export: `no-unused-export ${tsFiles}`,
     markdown: `markdownlint README.md`,
     typeCoverage: 'type-coverage -p src/tsconfig.nodejs.json --strict',
@@ -28,5 +28,5 @@ export default {
   test: [
     'ava'
   ],
-  fix: `eslint --ext .js,.ts,.tsx ${tsFiles} --fix`
+  fix: `eslint ${tsFiles} --fix`
 }
