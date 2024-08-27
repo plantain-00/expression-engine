@@ -39,7 +39,7 @@
     "markdownlint-cli": "0.41.0",
     "no-unused-export": "1.15.0",
     "pegjs": "^0.10.0",
-    "rimraf": "6.0.1",
+    "rimraf": "5.0.7",
     "rollup": "4.21.1",
     "rollup-plugin-uglify": "6.0.4",
     "tsconfig-plantain": "0.0.2",
